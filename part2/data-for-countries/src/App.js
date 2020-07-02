@@ -1,10 +1,55 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 
+//Function to fetch weather
+const WeatherInfo = ({ city }) => {
+    const [weather, setWeather] = useState({
+        main: {
+            temp: 3,
+        },
+        wind: {
+            speed: 3,
+        },
+        weather: 'clear',
+    })
+
+    useEffect(() => {
+        axios({
+            "method": "GET",
+            "url": "https://community-open-weather-map.p.rapidapi.com/weather",
+            "headers": {
+                "content-type": "application/octet-stream",
+                "x-rapidapi-host": "community-open-weather-map.p.rapidapi.com",
+                "x-rapidapi-key": "88293be7aemsh30a57e451312b8fp116471jsnef713fa59936",
+                "useQueryString": true
+            }, "params": {
+                "units": 'metric',
+                "mode": "xml%2C html",
+                "q": city,
+            }
+        })
+            .then((response) => {
+                console.log(response.data)
+                setWeather(response.data)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }, [city])
+    return (
+        <div>
+            <h2>Weather of {city}</h2>
+            <div>temperature: {weather.main.temp}ºC</div>
+            <div>{weather.weather[0].description} <img src={`http://api.openweathermap.org/img/w/${weather.weather[0].icon}.png`} alt='image corresponding of its weather'></img></div>
+            <div>wind: {weather.wind.speed}k/h</div>
+            <div>humidity: {weather.main.humidity}%</div>
+        </div>
+    )
+}
+//    useEffect(() => fetchWeather('lisbon') , []) test function
 
 // Display the list of countries names
 const DisplayCountries = ({ countries }) => {
-    console.log(countries)
     const list = countries.map(
         country => { return (<li key={country.name}>{country.name} <ButtonView country={country}></ButtonView></li>) }
     )
@@ -20,20 +65,18 @@ const ButtonView = ({ country }) => {
     const [showComponent, setShowComponent] = useState(false)
 
     const showView = (country) => {
-        console.log('showView works')
         const countryVector = [country]
         return (<DisplayCountryInfo countries={countryVector}></DisplayCountryInfo>)
 
     }
 
     return (
-    <div>
-    <button type='button' onClick={() => {
-        setShowComponent(!showComponent)
-        console.log('button works', showComponent)
-        }}>show</button>
+        <div>
+            <button type='button' onClick={() => {
+                setShowComponent(!showComponent)
+            }}>show</button>
             {showComponent === true ? showView(country) : console.log('nao mostra view')}
-            </div>
+        </div>
     )
 }
 // Form para escolher países
@@ -47,7 +90,6 @@ const Form = ({ handleInput }) => {
 // View of the country with info
 const DisplayCountryInfo = ({ countries }) => {
     const country = countries[0]
-
     const languages = country.languages.map(language => {
         return (<li key={language.name}> {language.name} </li>)
     })
@@ -59,12 +101,12 @@ const DisplayCountryInfo = ({ countries }) => {
             <h2>languages</h2>
             <ul>{languages}</ul>
             <img src={country.flag} alt={'flag'} height='100px'></img>
+            <WeatherInfo city={country.capital}></WeatherInfo>
         </div>
     )
 }
 // Display which decides if it shows list of countries or country info
 const MainDisplay = ({ list }) => {
-    console.log('props of MainDisplay is', { list })
 
     if (list.length === 1) {
         return <DisplayCountryInfo countries={list}></DisplayCountryInfo>
@@ -96,8 +138,9 @@ const App = () => {
             })
     }, [])
 
+
+
     const filterCountries = () => {
-        console.log('the filter function returns', filter, countries)
         if (filter === '') { return countries }
         const list = countries.filter(country =>
             country.name.toLocaleLowerCase().includes(filter.toLowerCase())
