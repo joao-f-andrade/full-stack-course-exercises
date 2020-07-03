@@ -60,6 +60,7 @@ const App = () => {
     const [personsToShow, setPersonsToShow] = useState(persons)
     const [filter, setFilter] = useState('')
 
+
     useEffect(() => {
         console.log('effect')
         axios
@@ -87,13 +88,20 @@ const App = () => {
             name: newName,
             number: newNum
         }
-        setPersons(persons.concat(nameObject))
+        const newPersonObject = {
+            content: nameObject,
+            id: persons.length +1
+        }
+        axios
+        .post('http://localhost:3001/persons',nameObject)
+        .then(response => {
+            setPersons(persons.concat(response.data))
+            setPersonsToShow(persons.concat(response.data))
+        console.log(persons.concat(response.data))
+        })
         setNewName('')
         setNewNum('')
-        var cenas = personsToShow.concat(nameObject)
-        setPersonsToShow(() => filter === '' ? cenas :
-            cenas.filter(person => person.name.toLowerCase().includes(filter.toLowerCase())
-            ))
+     setFilter('')
     }
 
     //Functions add new Name and Number
@@ -121,7 +129,7 @@ const App = () => {
             <div>
                 filter shown with
                     <input
-                    onChange={handleFilterChange}
+                    onChange={handleFilterChange} value={filter}
                 />
             </div>
             <FormAddPeople addPerson={addPerson} newName={newName} handleNameChange={handleNameChange} newNum={newNum} handleNumChange={handleNumChange}></FormAddPeople>
