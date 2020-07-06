@@ -19,18 +19,28 @@ const Numbers = ({ persons, handleRemove }) => {
         </div>
     )
 }
+// Component notification
+const Notification = ({message}) => {
+    console.log('notification', message)
+    if (message === null) {
+        return null
+    }
+    return (
+        <div className='notification'>
+            {message}
+        </div>
+    )
+}
 
-
+// Component app
 const App = () => {
     // States
-    const [persons, setPersons] = useState([
-        { name: '', number: '',id:'' },
-
-    ])
+    const [persons, setPersons] = useState([  { name: '', number: '',id:'' }  ])
     const [newName, setNewName] = useState('')
     const [newNum, setNewNum] = useState('')
     const [personsToShow, setPersonsToShow] = useState(persons)
     const [filter, setFilter] = useState('')
+    const [notificationMessage, setNotificationMessage] = useState( 'operation happened')
 
 
     // Gets persons from server
@@ -46,9 +56,7 @@ const App = () => {
             })
     }, [])
 
-    useEffect(() =>
-        console.log('personsToShowUpdate', personsToShow)
-        , [personsToShow])
+    // Effect filters contacts
     useEffect(() => {
         console.log('filtragem', persons)
         setPersonsToShow(() => filter === '' ? persons :
@@ -63,6 +71,9 @@ const App = () => {
         persons.forEach(person => {
             if (person.name === newName) {
                 handleUpdate(person.id,newName,newNum)
+                const message = `${newName} was successfuly updated`
+                console.log('add person output message is',message)
+                handleNotification(message)
                 setNewName('')
                 setNewNum('')
                 foo = true
@@ -85,6 +96,9 @@ const App = () => {
             })
         setNewName('')
         setNewNum('')
+        const message = `${newName} was successfuly added`
+        console.log('add person output message is',message)
+        handleNotification(message)
     }
 
     //Functions add new Name and Number
@@ -119,6 +133,9 @@ const App = () => {
                     .then((persons) => {
                         console.log('effect output', persons)
                         setPersons(persons)
+                        const message = `${newName} was successfuly deleted`
+                        console.log('delete person output message is',message)
+                        handleNotification(message)
                     })
             })
     }
@@ -145,19 +162,27 @@ const App = () => {
             })
         })
     }
+    //Function handle notification
+    const handleNotification =(message) =>{
+        console.log('handle notification input is',message)
+        setNotificationMessage  (message)
+        setTimeout(() => {
+            setNotificationMessage(null)
+        },5000)
+    }
     //Body of Page
     return (
         <div>
             <h2>Phonebook</h2>
+            <Notification message={notificationMessage} />
             <div>
                 filter shown with
                     <input
                     onChange={handleFilterChange} value={filter}
                 />
             </div>
-            <FormAddPeople addPerson={addPerson} newName={newName} handleNameChange={handleNameChange} newNum={newNum} handleNumChange={handleNumChange}
-            ></FormAddPeople>
-            <Numbers persons={personsToShow} handleRemove={handleRemove}></Numbers>
+            <FormAddPeople addPerson={addPerson} newName={newName} handleNameChange={handleNameChange} newNum={newNum} handleNumChange={handleNumChange} />
+            <Numbers persons={personsToShow} handleRemove={handleRemove} />
         </div>
     )
 }
