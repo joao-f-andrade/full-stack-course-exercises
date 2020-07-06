@@ -20,13 +20,13 @@ const Numbers = ({ persons, handleRemove }) => {
     )
 }
 // Component notification
-const Notification = ({message}) => {
+const Notification = ({ message, className }) => {
     console.log('notification', message)
     if (message === null) {
         return null
     }
     return (
-        <div className='notification'>
+        <div className={className}>
             {message}
         </div>
     )
@@ -35,12 +35,13 @@ const Notification = ({message}) => {
 // Component app
 const App = () => {
     // States
-    const [persons, setPersons] = useState([  { name: '', number: '',id:'' }  ])
+    const [persons, setPersons] = useState([{ name: '', number: '', id: '' }])
     const [newName, setNewName] = useState('')
     const [newNum, setNewNum] = useState('')
     const [personsToShow, setPersonsToShow] = useState(persons)
     const [filter, setFilter] = useState('')
-    const [notificationMessage, setNotificationMessage] = useState( 'operation happened')
+    const [notificationMessage, setNotificationMessage] = useState(null)
+    const [errorMessage, setErrorMessage] = useState(null)
 
 
     // Gets persons from server
@@ -63,17 +64,14 @@ const App = () => {
             persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase())
             ))
     }, [persons, filter])
-    // Function adds new person to the list
+    // Function adds new person/updates to the list
     const addPerson = (event) => {
         var foo = false
         console.log('addPerson new', newName, newNum)
         event.preventDefault()
         persons.forEach(person => {
             if (person.name === newName) {
-                handleUpdate(person.id,newName,newNum)
-                const message = `${newName} was successfuly updated`
-                console.log('add person output message is',message)
-                handleNotification(message)
+                handleUpdate(person.id, newName, newNum)
                 setNewName('')
                 setNewNum('')
                 foo = true
@@ -97,7 +95,7 @@ const App = () => {
         setNewName('')
         setNewNum('')
         const message = `${newName} was successfuly added`
-        console.log('add person output message is',message)
+        console.log('add person output message is', message)
         handleNotification(message)
     }
 
@@ -119,12 +117,12 @@ const App = () => {
     }
     //Function remove entry
     const handleRemove = (id) => {
-        const person=persons.find(obj=>{
-            return obj.id===id
+        const person = persons.find(obj => {
+            return obj.id === id
         })
-        console.log('removing entry', id)
-        const confirmation=window.confirm(`Are you sure you want to delete ${person.name}'s contact?` )
-        if (!confirmation) { return console.log('removal aborted')}
+        console.log('removing entry', id, person)
+        const confirmation = window.confirm(`Are you sure you want to delete ${person.name}'s contact?`)
+        if (!confirmation) { return console.log('removal aborted') }
         personsService.remove(id)
             .then(() => {
                 console.log('remove part 2')
@@ -133,58 +131,82 @@ const App = () => {
                     .then((persons) => {
                         console.log('effect output', persons)
                         setPersons(persons)
-                        const message = `${newName} was successfuly deleted`
-                        console.log('delete person output message is',message)
+                        const message = `${person.name} was successfuly deleted`
+                        console.log('delete person output message is', message)
                         handleNotification(message)
                     })
             })
     }
     //Function update
-    const handleUpdate = (id,newName, newNum) => {
+    const handleUpdate = (id, newName, newNum) => {
         const newPerson = {
             name: newName,
             number: newNum,
-            id:id
+            id: id
         }
-        console.log('handle update',newPerson)
-        const confirmation=window.confirm(
-        `${newPerson.name}'s contact already exists. Do you wish to update it?`
+        console.log('handle update', newPerson)
+        const confirmation = window.confirm(
+            `${newPerson.name}'s contact already exists. Do you wish to update it?`
         )
-        if(!confirmation) {return console.log('update aborted')}
+        if (!confirmation) { return console.log('update aborted') }
 
         personsService
-        .update(id,newPerson)
-        .then(()=>{
-            personsService.getAll()
-            .then((persons)=>{
-                console.log('update output',persons)
-                setPersons(persons)
+            .update(id, newPerson)
+            .then((response) => {
+                if (response === undefined) {
+                     console.log('error part of handle update')
+                     handleErrorNotification(`Information of ${newPerson.name} was already deleted`)
+                     personsService.getAll()
+                        .then((persons) => {
+                            console.log('update output', persons)
+                            setPersons(persons)
+                        })
+                    }
+                else {
+                    console.log('worked')
+                    handleNotification(`${newPerson.name} was successfuly updated`)
+                    personsService.getAll()
+                        .then((persons) => {
+                            console.log('update output', persons)
+                            setPersons(persons)
+                        })
+                    }
             })
-        })
     }
-    //Function handle notification
-    const handleNotification =(message) =>{
-        console.log('handle notification input is',message)
-        setNotificationMessage  (message)
-        setTimeout(() => {
-            setNotificationMessage(null)
-        },5000)
-    }
-    //Body of Page
-    return (
+
+//Function handle notification
+const handleNotification = (message) => {
+    console.log('handle notification input is', message)
+    setNotificationMessage(message)
+    setTimeout(() => {
+        setNotificationMessage(null)
+    }, 5000)
+}
+//Function handle errorNotification
+const handleErrorNotification = (message) => {
+    console.log('handle errorNotification input is', message)
+    setErrorMessage(message)
+    setTimeout(() => {
+        setErrorMessage(null)
+    }, 5000)
+}
+//Body of Page
+return (
+    <div>
+        <h2>Phonebook</h2>
+        <Notification className='notification' message={notificationMessage} />
+        <Notification className='error' message={errorMessage} />
+
         <div>
-            <h2>Phonebook</h2>
-            <Notification message={notificationMessage} />
-            <div>
-                filter shown with
+            filter shown with
                     <input
-                    onChange={handleFilterChange} value={filter}
-                />
-            </div>
-            <FormAddPeople addPerson={addPerson} newName={newName} handleNameChange={handleNameChange} newNum={newNum} handleNumChange={handleNumChange} />
-            <Numbers persons={personsToShow} handleRemove={handleRemove} />
+                onChange={handleFilterChange} value={filter}
+            />
         </div>
-    )
+        <FormAddPeople addPerson={addPerson} newName={newName} handleNameChange={handleNameChange} newNum={newNum} handleNumChange={handleNumChange} />
+        <Numbers persons={personsToShow} handleRemove={handleRemove} />
+    </div>
+)
 }
 
 export default App

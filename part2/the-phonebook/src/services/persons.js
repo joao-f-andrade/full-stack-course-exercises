@@ -21,6 +21,10 @@ const add = (newObject) => {
         console.log('server.add output', response.data)
         return response.data
     })
+    .catch(error => {
+        console.log('delete from server failed',error)
+    })
+    
 }
 
 const remove = (id) => {
@@ -31,6 +35,9 @@ const remove = (id) => {
     return request.then(
         (response => console.log(response))
     )
+    .catch(error => {
+        console.log('delete from server failed',error)
+    })
 }
 const update = (id,newObject) => {
     console.log('is updating',newObject)
@@ -40,6 +47,9 @@ const update = (id,newObject) => {
     return  request.then(response => {
             console.log('update raw output',response)
             return response.data})
+            .catch(error=> {
+                console.log('error',error)
+            })
         
 }
 
