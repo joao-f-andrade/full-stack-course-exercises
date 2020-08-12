@@ -11,7 +11,8 @@
     "deploy": "git push heroku master",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push && npm run deploy",
     "logs:prod": "heroku logs --tail",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "author": "JoaoAndrade",
   "license": "ISC",
@@ -23,6 +24,10 @@
     "nodemon": "^2.0.4"
   },
   "devDependencies": {
+    "eslint": "^7.6.0",
     "jest": "^26.3.0"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }
