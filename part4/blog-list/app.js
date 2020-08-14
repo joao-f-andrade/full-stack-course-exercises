@@ -6,15 +6,15 @@ const blogsRouter = require('./controllers/blogs')
 const logger = require('./utils/logger')
 const mongoose = require('mongoose')
 
-logger.info('connectiong to', config.mongoUrl)
+logger.info('connectiong to', config.MONGODB_URI)
 
-mongoose.connect(config.mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
-.then(()  =>  {
+mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(()  =>  {
     logger.info('connected to MongoDB')
-})
-.catch((error)  =>  {
+  })
+  .catch((error)  =>  {
     logger.error('error connection to MongoDB:', error.message)
-} )
+  } )
 
 app.use(cors())
 app.use(express.json())
