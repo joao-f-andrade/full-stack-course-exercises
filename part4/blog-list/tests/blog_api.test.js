@@ -34,7 +34,25 @@ test('blogs have an id', async () => {
   }
 })
 
+test.only('post blogs works', async () => {
+  const newBLog = {
+    'title': 'reddit',
+    'author': 'redditors',
+    'url': 'https://reddit.com',
+    'likes': 3
+  }
+  const oldBLogs = await helper.blogsInDb()
+  await api
+    .post('/api/blogs')
+    .send(newBLog)
+  const newBlogs = await helper.blogsInDb()
+  const lastBlog = newBlogs[newBlogs.length-1]
+  delete lastBlog.id
+  expect(newBlogs)
+    .toHaveLength(oldBLogs.length + 1)
+  expect(lastBlog).toEqual(newBLog)
 
+})
 
 afterAll(() => {
   mongoose.connection.close()
