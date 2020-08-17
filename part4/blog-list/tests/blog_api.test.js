@@ -34,7 +34,7 @@ test('blogs have an id', async () => {
   }
 })
 
-test.only('post blogs works', async () => {
+test('post blogs works', async () => {
   const newBLog = {
     'title': 'reddit',
     'author': 'redditors',
@@ -46,7 +46,7 @@ test.only('post blogs works', async () => {
     .post('/api/blogs')
     .send(newBLog)
   const newBlogs = await helper.blogsInDb()
-  const lastBlog = newBlogs[newBlogs.length-1]
+  const lastBlog = newBlogs[newBlogs.length - 1]
   delete lastBlog.id
   expect(newBlogs)
     .toHaveLength(oldBLogs.length + 1)
@@ -54,6 +54,20 @@ test.only('post blogs works', async () => {
 
 })
 
+test.only('blogs without likes property will have it set to 0', async () => {
+  const newBLog = {
+    'title': 'reddit',
+    'author': 'redditors',
+    'url': 'https://reddit.com',
+  }
+  await api
+    .post('/api/blogs')
+    .send(newBLog)
+  const newBlogs = await helper.blogsInDb()
+  expect(newBlogs[newBlogs.length-1].likes).toBe(0)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
+
