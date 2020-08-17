@@ -54,7 +54,7 @@ test('post blogs works', async () => {
 
 })
 
-test.only('blogs without likes property will have it set to 0', async () => {
+test('blogs without likes property will have it set to 0', async () => {
   const newBLog = {
     'title': 'reddit',
     'author': 'redditors',
@@ -64,7 +64,29 @@ test.only('blogs without likes property will have it set to 0', async () => {
     .post('/api/blogs')
     .send(newBLog)
   const newBlogs = await helper.blogsInDb()
-  expect(newBlogs[newBlogs.length-1].likes).toBe(0)
+  console.log(newBlogs)
+  expect(newBlogs[newBlogs.length - 1].likes).toBe(0)
+})
+
+test('creating a blog without a title or url returns error 400 bad request', async () => {
+  const newBlogNoAuthor = {
+    'author': 'redditors',
+    'url': 'https://reddit.com',
+    'likes': 3
+  }
+  const newBlogNoUrl = {
+    'title': 'reddit',
+    'author': 'redditors',
+    'likes': 3
+  }
+  await api
+    .post('/api/blogs')
+    .send(newBlogNoAuthor)
+    .expect(400)
+  await api
+    .post('/api/blogs')
+    .send(newBlogNoUrl)
+    .expect(400)
 })
 
 afterAll(() => {
