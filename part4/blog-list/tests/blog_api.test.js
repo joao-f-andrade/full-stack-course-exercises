@@ -25,6 +25,15 @@ test('blogs are returned as json', async () => {
 
 })
 
+test.only('blogs have an id', async () => {
+  const response = await api
+    .get('/api/blogs')
+  for (let blog of response.body) {
+    expect(blog.id).toBeDefined()
+    expect(blog._id).toBeUndefined()
+  }
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
