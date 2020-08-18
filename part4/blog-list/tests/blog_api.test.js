@@ -16,7 +16,7 @@ beforeEach(async () => {
   }
 })
 
-describe('getting existing notes', () => {
+describe('getting existing blogs', () => {
   test('blogs are returned as json', async () => {
     const response = await api
       .get('/api/blogs')
@@ -66,7 +66,6 @@ describe('posting blogs', () => {
       .post('/api/blogs')
       .send(newBLog)
     const newBlogs = await helper.blogsInDb()
-    console.log(newBlogs)
     expect(newBlogs[newBlogs.length - 1].likes).toBe(0)
   })
 
@@ -92,6 +91,21 @@ describe('posting blogs', () => {
   })
 })
 
+describe('deleting blogs', () => {
+  test('blog is deleted by id', async () => {
+    const blogs = await helper.blogsInDb()
+    const id = blogs[0].id
+
+    await api
+      .delete(`/api/blogs/${id}`)
+      .expect(204)
+
+    const newBLogs = await helper.blogsInDb()
+    expect(newBLogs).toHaveLength(blogs.length - 1)
+
+    expect(newBLogs).not.toContain(blogs[0])
+  })
+})
 afterAll(() => {
   mongoose.connection.close()
 })
