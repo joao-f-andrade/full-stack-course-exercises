@@ -106,6 +106,27 @@ describe('deleting blogs', () => {
     expect(newBLogs).not.toContain(blogs[0])
   })
 })
+
+describe('updating likes of blogs', async () => {
+  test('updates the correct number of likes', async () => {
+    const blogs = await helper.blogsInDb()
+    const id = blogs[0].id
+    const updatedBlog = {
+      id: id,
+      likes: blogs[0].likes + 2,
+      author: blogs[0].author,
+      title: blogs[0].title,
+      url: blogs[0].url
+    }
+
+    await api
+      .put(`/api/blogs/${id}`)
+      .send(updatedBlog)
+      .expect(200)
+
+    expect(await helper.blogsInDb()).toContainEqual(updatedBlog)
+  })
+})
 afterAll(() => {
   mongoose.connection.close()
 })
