@@ -21,7 +21,7 @@ app.use(cors())
 app.use(express.json())
 
 app.use('/api/blogs', blogsRouter)
-app.user('/api/users', usersRouter)
+app.use('/api/users', usersRouter)
 
 
 module.exports = app
