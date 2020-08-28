@@ -4,6 +4,17 @@ const User = require('../models/user')
 
 usersRouter.post('/', async (request, response) => {
   const body = request.body
+  console.log(body.password)
+  if(body.password === undefined || body.password.length < 3) {
+    return response.status(400).json('password invalid')
+  }
+  if(body.username === undefined || body.username.length < 3) {
+    return response.status(400).json('invalid username')
+  }
+  const repeatedUsername = await User.find({ username: body.username })
+  if (repeatedUsername.length !== 0) {
+    return response.status(400).json('repeated username')
+  }
 
   const saltRounds = 10
   const passwordHash = await bcrypt.hash(body.password, saltRounds)
