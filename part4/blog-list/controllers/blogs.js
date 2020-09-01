@@ -8,7 +8,7 @@ blogsRouter.get('/', async (request, response) => {
 
 blogsRouter.post('/', async (request, response) => {
   const blog = await new Blog(request.body)
-
+  blog.user = await Blog.findById('5f4942ce33a0982f2b49abdb').id
   const savedBlog = await blog.save()
   response.status(201).json(savedBlog)
 })
