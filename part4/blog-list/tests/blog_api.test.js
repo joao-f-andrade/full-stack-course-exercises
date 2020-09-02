@@ -8,7 +8,6 @@ const bcrypt = require('bcrypt')
 const User = require('../models/user')
 const Blog = require('../models/blog')
 
-
 beforeEach(async () => {
   await Blog.deleteMany({})
 
@@ -58,6 +57,7 @@ describe('posting blogs', () => {
     const newBlogs = await helper.blogsInDb()
     const lastBlog = newBlogs[newBlogs.length - 1]
     delete lastBlog.id
+    delete lastBlog.user
     expect(newBlogs)
       .toHaveLength(oldBLogs.length + 1)
     expect(lastBlog).toEqual(newBLog)
@@ -115,7 +115,7 @@ describe('deleting blogs', () => {
   })
 })
 
-describe('updating likes of blogs', async () => {
+describe('updating likes of blogs', () => {
   test('updates the correct number of likes', async () => {
     const blogs = await helper.blogsInDb()
     const id = blogs[0].id
