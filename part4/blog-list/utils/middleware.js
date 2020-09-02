@@ -25,12 +25,10 @@ const errorHandler = (error, request, response, next) => {
 }
 
 const getTokenFrom = (request, response, next) => {
-  console.log('this is getTokenFrom', request.get('authorization'))
   const authorization = request.get('authorization')
   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
     request.token = authorization.substring(7)
   }
-  console.log('this request.token', request.token)
 
   next()
 }
