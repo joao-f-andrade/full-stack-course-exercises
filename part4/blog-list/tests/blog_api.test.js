@@ -126,6 +126,22 @@ describe('posting blogs', () => {
       .set('Authorization', token)
       .expect(400)
   })
+  test('posting a blog without a token responds with 401 code', async () => {
+    const newBLog = {
+      'title': 'reddit',
+      'author': 'redditors',
+      'url': 'https://reddit.com',
+      'likes': 3
+    }
+    const oldBLogs = await helper.blogsInDb()
+    await api
+      .post('/api/blogs')
+      .send(newBLog)
+      .expect(401)
+    const newBlogs = await helper.blogsInDb()
+    expect(newBlogs)
+      .toHaveLength(oldBLogs.length)
+  })
 })
 
 describe('deleting blogs', () => {
