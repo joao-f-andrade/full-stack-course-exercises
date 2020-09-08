@@ -3,7 +3,7 @@ const User = require('../models/user')
 
 const initialBlogs = [
   { 'title':'Medium',
-    'author':'multiple',
+    'author':'root',
     'url':'https://medium.com/better-programming',
     'likes':0
   },

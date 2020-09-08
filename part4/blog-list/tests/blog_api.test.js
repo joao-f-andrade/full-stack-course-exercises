@@ -9,6 +9,7 @@ const User = require('../models/user')
 const Blog = require('../models/blog')
 
 beforeEach(async () => {
+  // Initializes user and Db
   await Blog.deleteMany({})
 
   for (let blog of helper.initialBlogs) {
@@ -44,6 +45,14 @@ describe('getting existing blogs', () => {
 
 describe('posting blogs', () => {
   test('post blogs works', async () => {
+    const userLoginInfo = {
+      username: 'root',
+      password: 'sekret'
+    }
+    const userLogin = await api
+      .post('/api/login/')
+      .send(userLoginInfo)
+    const token = (`bearer ${userLogin.body.token}`)
     const newBLog = {
       'title': 'reddit',
       'author': 'redditors',
@@ -53,6 +62,7 @@ describe('posting blogs', () => {
     const oldBLogs = await helper.blogsInDb()
     await api
       .post('/api/blogs')
+      .set('Authorization', token)
       .send(newBLog)
     const newBlogs = await helper.blogsInDb()
     const lastBlog = newBlogs[newBlogs.length - 1]
@@ -65,6 +75,14 @@ describe('posting blogs', () => {
   })
 
   test('blogs without likes property will have it set to 0', async () => {
+    const userLoginInfo = {
+      username: 'root',
+      password: 'sekret'
+    }
+    const userLogin = await api
+      .post('/api/login/')
+      .send(userLoginInfo)
+    const token = (`bearer ${userLogin.body.token}`)
     const newBLog = {
       'title': 'reddit',
       'author': 'redditors',
@@ -73,11 +91,20 @@ describe('posting blogs', () => {
     await api
       .post('/api/blogs')
       .send(newBLog)
+      .set('Authorization', token)
     const newBlogs = await helper.blogsInDb()
     expect(newBlogs[newBlogs.length - 1].likes).toBe(0)
   })
 
   test('creating a blog without a title or url returns error 400 bad request', async () => {
+    const userLoginInfo = {
+      username: 'root',
+      password: 'sekret'
+    }
+    const userLogin = await api
+      .post('/api/login/')
+      .send(userLoginInfo)
+    const token = (`bearer ${userLogin.body.token}`)
     const newBlogNoAuthor = {
       'author': 'redditors',
       'url': 'https://reddit.com',
@@ -90,22 +117,33 @@ describe('posting blogs', () => {
     }
     await api
       .post('/api/blogs')
+      .set('Authorization', token)
       .send(newBlogNoAuthor)
       .expect(400)
     await api
       .post('/api/blogs')
       .send(newBlogNoUrl)
+      .set('Authorization', token)
       .expect(400)
   })
 })
 
 describe('deleting blogs', () => {
   test('blog is deleted by id', async () => {
+    const userLoginInfo = {
+      username: 'root',
+      password: 'sekret'
+    }
+    const userLogin = await api
+      .post('/api/login/')
+      .send(userLoginInfo)
+    const token = (`bearer ${userLogin.body.token}`)
     const blogs = await helper.blogsInDb()
     const id = blogs[0].id
 
     await api
       .delete(`/api/blogs/${id}`)
+      .set('Authorization', token)
       .expect(204)
 
     const newBLogs = await helper.blogsInDb()
