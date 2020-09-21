@@ -20,7 +20,6 @@ const App = () => {
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
-      console.log(username, password)
       const user = await loginService.login({
         username, password
       })
