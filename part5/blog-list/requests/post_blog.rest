@@ -1,0 +1,9 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI1ZjRmNzZhN2QzNmQxMjc1MjU0Y2E5MmMiLCJpYXQiOjE1OTk1NzMyOTN9.bPd7baueeqUAYNTBZUcKVCv7dowYi9I0xJSWCxEws1o
+
+{
+  "title": "blog6",
+    "url": "https://medium.com/better-programming",
+    "likes": 0
+}
