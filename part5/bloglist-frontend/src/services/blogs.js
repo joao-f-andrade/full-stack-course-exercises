@@ -10,5 +10,15 @@ const getAll = () => {
 const setToken = newToken => {
   return token = `bearer ${newToken}`
 }
-
-export default { getAll, setToken }
+const saveBlog = async (token,body) => {
+  console.log('token e body',token,body)
+  const config = {
+        headers: { Authorization: token },
+        }
+  const request = await axios.post(baseUrl,
+    body,
+  config
+  )
+  console.log(request)
+}
+export default { getAll, setToken, saveBlog }
