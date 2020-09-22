@@ -15,7 +15,7 @@ const App = () => {
   const [newAuthor, setNewAuthor] = useState('')
   const [newTitle, setNewTitle] = useState('')
   const [newUrl, setNewUrl] = useState('')
-
+  const [successMessage, setSuccessMessage] = useState(null)
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs(blogs)
@@ -60,20 +60,20 @@ const App = () => {
   }
   const handleTitleChange = (target) => {
     setNewTitle(target)
-    console.log('title',target)
+    console.log('title', target)
   }
   const handleUrlChange = (target) => {
     setNewUrl(target)
-    console.log('url',target)
+    console.log('url', target)
 
   }
   const handleAuthorChange = (target) => {
     setNewAuthor(target)
-    console.log('author',target)
+    console.log('author', target)
   }
   const handleNewBlog = async (event) => {
     event.preventDefault()
-    console.log('token',user.token)
+    console.log('token', user.token)
     try {
       const newBlog = await blogService.saveBlog(
         user.token, {
@@ -82,7 +82,11 @@ const App = () => {
         'title': newTitle
       }
       )
-      console.log('saved blog',newBlog)
+      console.log('saved blog', newBlog)
+      setSuccessMessage(`${newBlog.title} by ${newBlog.author} added`)
+      setTimeout(() => {
+        setSuccessMessage(null)
+      }, 5000)
     } catch (exception) {
       setErrorMessage('invalid blog')
       setTimeout(() => {
@@ -105,16 +109,17 @@ const App = () => {
         <LoginForm submit={handleLogin} handlePassChange={handlePassChange} handleUsernameChange={handleUsernameChange} /> :
         <div>
           <h2>blogs</h2>
+          <Notification message={successMessage} />
           <p> {user.name} <button type='button' onClick={logOut} >Log out</button>
           </p>
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
           )}
           <NewBlogForm handleTitleChange={handleTitleChange}
-          handleAuthorChange={handleAuthorChange}
-          handleUrlChange={handleUrlChange}
-          submit={handleNewBlog}
-           />
+            handleAuthorChange={handleAuthorChange}
+            handleUrlChange={handleUrlChange}
+            submit={handleNewBlog}
+          />
         </div>
       }
     </div>
