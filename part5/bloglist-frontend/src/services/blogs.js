@@ -19,6 +19,6 @@ const saveBlog = async (token,body) => {
     body,
   config
   )
-  console.log(request)
+  return(request.data)
 }
 export default { getAll, setToken, saveBlog }
