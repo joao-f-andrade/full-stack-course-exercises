@@ -77,13 +77,11 @@ const App = () => {
     )
   }
   const loginForm = () => (
-    <Togglable buttonLabel='login'>
       <LoginForm
         handleSubmit={handleLogin}
         handlePassChange={({ target }) => setPassword(target.value)}
         handleUsernameChange={({ target }) => setUsername(target.value)}
       />
-    </Togglable>
   )
 
   return (
