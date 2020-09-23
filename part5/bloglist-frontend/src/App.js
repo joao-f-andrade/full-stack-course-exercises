@@ -5,6 +5,7 @@ import loginService from './services/login'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import NewBlogForm from './components/NewBlogForm'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -47,12 +48,6 @@ const App = () => {
         setErrorMessage(null)
       }, 5000)
     }
-  }
-  const handlePassChange = (target) => {
-    setPassword(target)
-  }
-  const handleUsernameChange = (target) => {
-    setUsername(target)
   }
   const logOut = () => {
     setUser(null)
@@ -106,7 +101,11 @@ const App = () => {
     <div>
       <Notification message={errorMessage} />
       {user === null ?
-        <LoginForm submit={handleLogin} handlePassChange={handlePassChange} handleUsernameChange={handleUsernameChange} /> :
+        <LoginForm
+          handleSubmit={handleLogin}
+          handlePassChange={({ target }) => setPassword(target.value)}
+          handleUsernameChange={({ target }) => setUsername(target.value)}
+        /> :
         <div>
           <h2>blogs</h2>
           <Notification message={successMessage} />
@@ -115,7 +114,8 @@ const App = () => {
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
           )}
-          <NewBlogForm handleTitleChange={handleTitleChange}
+          <NewBlogForm
+            handleTitleChange={handleTitleChange}
             handleAuthorChange={handleAuthorChange}
             handleUrlChange={handleUrlChange}
             submit={handleNewBlog}
