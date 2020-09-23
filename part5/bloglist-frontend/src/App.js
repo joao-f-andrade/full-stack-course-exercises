@@ -17,6 +17,8 @@ const App = () => {
   const [newTitle, setNewTitle] = useState('')
   const [newUrl, setNewUrl] = useState('')
   const [successMessage, setSuccessMessage] = useState(null)
+
+  const noteFormRef = React.createRef()
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs(blogs)
@@ -96,16 +98,21 @@ const App = () => {
       setBlogs(blogs)
     )
   }
+  const loginForm = () => (
+    <Togglable buttonLabel='login'>
+      <LoginForm
+        handleSubmit={handleLogin}
+        handlePassChange={({ target }) => setPassword(target.value)}
+        handleUsernameChange={({ target }) => setUsername(target.value)}
+      />
+    </Togglable>
+  )
 
   return (
     <div>
       <Notification message={errorMessage} />
       {user === null ?
-        <LoginForm
-          handleSubmit={handleLogin}
-          handlePassChange={({ target }) => setPassword(target.value)}
-          handleUsernameChange={({ target }) => setUsername(target.value)}
-        /> :
+        loginForm() :
         <div>
           <h2>blogs</h2>
           <Notification message={successMessage} />
