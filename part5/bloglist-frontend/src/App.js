@@ -55,19 +55,7 @@ const App = () => {
     setUser(null)
     window.localStorage.removeItem('loggedUser')
   }
-  const handleTitleChange = (target) => {
-    setNewTitle(target)
-    console.log('title', target)
-  }
-  const handleUrlChange = (target) => {
-    setNewUrl(target)
-    console.log('url', target)
 
-  }
-  const handleAuthorChange = (target) => {
-    setNewAuthor(target)
-    console.log('author', target)
-  }
   const handleNewBlog = async (event) => {
     event.preventDefault()
     console.log('token', user.token)
@@ -122,9 +110,9 @@ const App = () => {
             <Blog key={blog.id} blog={blog} />
           )}
           <NewBlogForm
-            handleTitleChange={handleTitleChange}
-            handleAuthorChange={handleAuthorChange}
-            handleUrlChange={handleUrlChange}
+            handleTitleChange={({ target }) => setNewTitle(target.value)}
+            handleAuthorChange={({ target }) => setNewAuthor(target.value)}
+            handleUrlChange={({ target }) => setNewUrl(target.value)}
             submit={handleNewBlog}
           />
         </div>
