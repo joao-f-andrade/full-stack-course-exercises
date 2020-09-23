@@ -13,9 +13,6 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
-  const [newAuthor, setNewAuthor] = useState('')
-  const [newTitle, setNewTitle] = useState('')
-  const [newUrl, setNewUrl] = useState('')
   const [successMessage, setSuccessMessage] = useState(null)
 
   const noteFormRef = React.createRef()
@@ -56,16 +53,11 @@ const App = () => {
     window.localStorage.removeItem('loggedUser')
   }
 
-  const handleNewBlog = async (event) => {
-    event.preventDefault()
+  const createNewBlog = async (blogObject) => {
     console.log('token', user.token)
     try {
       const newBlog = await blogService.saveBlog(
-        user.token, {
-        'author': newAuthor,
-        'url': newUrl,
-        'title': newTitle
-      }
+        user.token, blogObject
       )
       console.log('saved blog', newBlog)
       setSuccessMessage(`${newBlog.title} by ${newBlog.author} added`)
@@ -79,9 +71,6 @@ const App = () => {
       }, 5000)
       console.log(exception)
     }
-    setNewAuthor('')
-    setNewTitle('')
-    setNewUrl('')
     blogService.getAll().then(blogs =>
       setBlogs(blogs)
     )
@@ -110,10 +99,7 @@ const App = () => {
             <Blog key={blog.id} blog={blog} />
           )}
           <NewBlogForm
-            handleTitleChange={({ target }) => setNewTitle(target.value)}
-            handleAuthorChange={({ target }) => setNewAuthor(target.value)}
-            handleUrlChange={({ target }) => setNewUrl(target.value)}
-            submit={handleNewBlog}
+            createNewBlog={createNewBlog}
           />
         </div>
       }
