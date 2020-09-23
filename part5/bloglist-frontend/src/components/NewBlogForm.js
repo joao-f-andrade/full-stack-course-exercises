@@ -23,7 +23,7 @@ const NewBlogForm = ({ createNewBlog }) => {
 
   return (
     <form onSubmit={submit}>
-      <h2>Create new</h2>
+      <h2>Create new blog</h2>
       <div>
         title
       <input
