@@ -98,9 +98,11 @@ const App = () => {
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
           )}
-          <NewBlogForm
-            createNewBlog={createNewBlog}
-          />
+          <Togglable buttonLabel='Create new blog'>
+            <NewBlogForm
+              createNewBlog={createNewBlog}
+            />
+          </Togglable>
         </div>
       }
     </div>
