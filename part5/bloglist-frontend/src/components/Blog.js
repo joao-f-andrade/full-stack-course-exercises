@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 const Blog = ({
   blog,
-  handleLike
+  handleLike,
+  handleDelete
 }) => {
   const blogStyle = {
     paddingTop: 10,
@@ -23,6 +24,10 @@ const Blog = ({
     event.preventDefault()
     handleLike(blog)
   }
+  const erase = (event) => {
+    event.preventDefault()
+    handleDelete(blog)
+  }
 
   return (
     <div style={blogStyle}>
@@ -35,6 +40,7 @@ const Blog = ({
         <div> {blog.url} </div>
         <div> likes {blog.likes} <button onClick={like}>like</button></div>
         <div> {blog.user.name} </div>
+        <button onClick={erase}>delete</button>
       </div>
     </div>
   )

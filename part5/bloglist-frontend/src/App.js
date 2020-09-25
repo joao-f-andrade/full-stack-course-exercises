@@ -36,6 +36,7 @@ const App = () => {
         username, password
       })
       setUser(user)
+      user.token = blogService.setToken(user.token)
       setUsername('')
       setPassword('')
       window.localStorage.setItem(
@@ -52,6 +53,29 @@ const App = () => {
     await blogService.likeBlog(user.token, blog)
     const newBLogs = await blogService.getAll()
     setBlogs(newBLogs)
+  }
+  const handleDelete = async (blog) => {
+    const confirmation = window.confirm(`are you sure you want to permmanently delete ${blog.title}?`)
+    if (confirmation === true) {
+      try {
+        await blogService.deleteBlog(user.token, blog)
+        const newBLogs = await blogService.getAll()
+        setBlogs(newBLogs)
+      } catch (exception) {
+        setErrorMessage('Operation failed')
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+        console.log(exception)
+      }
+    }
+    else {
+      setErrorMessage('Operation aborted')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+
   }
   const logOut = () => {
     setUser(null)
@@ -81,11 +105,11 @@ const App = () => {
     )
   }
   const loginForm = () => (
-      <LoginForm
-        handleSubmit={handleLogin}
-        handlePassChange={({ target }) => setPassword(target.value)}
-        handleUsernameChange={({ target }) => setUsername(target.value)}
-      />
+    <LoginForm
+      handleSubmit={handleLogin}
+      handlePassChange={({ target }) => setPassword(target.value)}
+      handleUsernameChange={({ target }) => setUsername(target.value)}
+    />
   )
 
   return (
@@ -99,7 +123,7 @@ const App = () => {
           <p> {user.name} <button type='button' onClick={logOut} >Log out</button>
           </p>
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} handleLike={handleLike} />
+            <Blog key={blog.id} blog={blog} handleLike={handleLike} handleDelete={handleDelete} />
           )}
           <Togglable buttonLabel='Create new blog' ref={newBlogFormRef}>
             <NewBlogForm

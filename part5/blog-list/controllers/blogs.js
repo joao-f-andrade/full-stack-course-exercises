@@ -37,13 +37,14 @@ blogsRouter.delete('/:id', async (request, response) => {
   })
   const user = await User.findById(decodedToken.id)
   const author = await Blog.findById(request.params.id)
-
-  if (user.username === author.author && author !== undefined) {
+  if (JSON.stringify(user._id) === JSON.stringify(author.user) && author !== undefined) {
+    console.log('deu igualdade')
     await Blog
       .findByIdAndRemove(request.params.id)
     return response.status(204).end()
 
   }
+  console.log('antes da response')
   return response.status(400).json({ error: 'only the author can delete the blog' })
 })
 

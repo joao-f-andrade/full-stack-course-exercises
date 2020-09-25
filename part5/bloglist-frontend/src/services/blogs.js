@@ -26,9 +26,15 @@ const saveBlog = async (token, body) => {
 const likeBlog = async (token, body) => {
   console.log('token e body', token, body)
   body.likes += 1
-  console.log('body.user', body.user)
   body.user = body.user.id
   const request = await axios.put(`${baseUrl}/${body.id}`, body)
   return (request)
 }
-export default { getAll, setToken, saveBlog, likeBlog }
+const deleteBlog = async (token, body) => {
+  console.log('token and body', token, body)
+  const config = {
+    headers: { Authorization: token },
+  }
+  await axios.delete(`${baseUrl}/${body.id}`,config)
+}
+export default { getAll, setToken, saveBlog, likeBlog, deleteBlog }
