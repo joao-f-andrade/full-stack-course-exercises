@@ -48,11 +48,15 @@ const App = () => {
       }, 5000)
     }
   }
+  const handleLike = async (blog) => {
+    await blogService.likeBlog(user.token, blog)
+    const newBLogs = await blogService.getAll()
+    setBlogs(newBLogs)
+  }
   const logOut = () => {
     setUser(null)
     window.localStorage.removeItem('loggedUser')
   }
-
   const createNewBlog = async (blogObject) => {
     newBlogFormRef.current.toggleVisibility()
     console.log('token', user.token)
@@ -95,7 +99,7 @@ const App = () => {
           <p> {user.name} <button type='button' onClick={logOut} >Log out</button>
           </p>
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
+            <Blog key={blog.id} blog={blog} handleLike={handleLike} />
           )}
           <Togglable buttonLabel='Create new blog' ref={newBlogFormRef}>
             <NewBlogForm

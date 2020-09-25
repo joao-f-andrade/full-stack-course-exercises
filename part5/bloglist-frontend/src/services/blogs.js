@@ -21,4 +21,11 @@ const saveBlog = async (token,body) => {
   )
   return(request.data)
 }
-export default { getAll, setToken, saveBlog }
+const likeBlog = async (token,body) => {
+  console.log('token e body', token, body)
+  body.likes += 1
+  delete body.user
+  const request = await axios.put(`${baseUrl}/${body.id}`,body)
+  return(request)
+}
+export default { getAll, setToken, saveBlog, likeBlog }

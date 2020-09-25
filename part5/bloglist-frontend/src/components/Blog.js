@@ -1,5 +1,8 @@
-import React,{useState} from 'react'
-const Blog = ({ blog }) => {
+import React, { useState } from 'react'
+const Blog = ({
+  blog,
+  handleLike
+}) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -16,17 +19,21 @@ const Blog = ({ blog }) => {
   const toggleVisibility = () => {
     setVisible(!visible)
   }
+  const like = (event) => {
+    event.preventDefault()
+    handleLike(blog)
+  }
 
   return (
     <div style={blogStyle}>
       <div>
         {blog.title} {blog.author}
-          <button style={hideWhenVisible} onClick={toggleVisibility}>view</button>
-          <button style={showWhenVisible} onClick={toggleVisibility}>hide</button>
+        <button style={hideWhenVisible} onClick={toggleVisibility}>view</button>
+        <button style={showWhenVisible} onClick={toggleVisibility}>hide</button>
       </div>
       <div style={showWhenVisible}>
         <div> {blog.url} </div>
-        <div> likes {blog.likes} </div>
+        <div> likes {blog.likes} <button onClick={like}>like</button></div>
         <div> {blog.user.name} </div>
       </div>
     </div>
