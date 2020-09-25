@@ -38,17 +38,21 @@ blogsRouter.delete('/:id', async (request, response) => {
   const user = await User.findById(decodedToken.id)
   const author = await Blog.findById(request.params.id)
   if (JSON.stringify(user._id) === JSON.stringify(author.user) && author !== undefined) {
-    console.log('deu igualdade')
     await Blog
       .findByIdAndRemove(request.params.id)
     return response.status(204).end()
-
   }
-  console.log('antes da response')
   return response.status(400).json({ error: 'only the author can delete the blog' })
 })
 
 blogsRouter.put('/:id', async (request, response) => {
+  const token = request.token
+  jwt.verify(token, process.env.SECRET, (err, decoded) => {
+    if (err) {
+      return response.status(401).json({ error: 'token missing or invalid' })
+    }
+    return decoded
+  })
   const newBlog = request.body
   const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, newBlog, { new: true })
   response.json(updatedBlog).status(200)

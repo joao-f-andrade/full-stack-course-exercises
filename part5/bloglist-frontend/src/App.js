@@ -23,10 +23,11 @@ const App = () => {
   }, [])
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
+    console.log('logged user',loggedUserJSON)
     if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      user.token = blogService.setToken(user.token)
+      const newUser = JSON.parse(loggedUserJSON)
+            console.log('new user', newUser)
+      setUser(newUser)
     }
   }, [])
   const handleLogin = async (event) => {
@@ -36,6 +37,7 @@ const App = () => {
         username, password
       })
       setUser(user)
+      console.log('newUser',user)
       user.token = blogService.setToken(user.token)
       setUsername('')
       setPassword('')

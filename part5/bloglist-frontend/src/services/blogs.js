@@ -27,7 +27,10 @@ const likeBlog = async (token, body) => {
   console.log('token e body', token, body)
   body.likes += 1
   body.user = body.user.id
-  const request = await axios.put(`${baseUrl}/${body.id}`, body)
+  const config = {
+    headers: { Authorization: token },
+  }
+  const request = await axios.put(`${baseUrl}/${body.id}`, body, config)
   return (request)
 }
 const deleteBlog = async (token, body) => {
