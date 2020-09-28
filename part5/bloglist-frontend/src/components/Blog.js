@@ -30,15 +30,15 @@ const Blog = ({
   }
 
   return (
-    <div style={blogStyle}>
-      <div>
+    <div className='blog' style={blogStyle}>
+      <div className='mainInfo'>
         {blog.title} {blog.author}
-        <button style={hideWhenVisible} onClick={toggleVisibility}>view</button>
+        <button style={hideWhenVisible} onClick={toggleVisibility} className='btnView'>view</button>
         <button style={showWhenVisible} onClick={toggleVisibility}>hide</button>
       </div>
-      <div style={showWhenVisible}>
+      <div style={showWhenVisible} className='extraInfo'>
         <div> {blog.url} </div>
-        <div> likes {blog.likes} <button onClick={like}>like</button></div>
+        <div> likes {blog.likes} <button onClick={like} className='btnLike'>like</button></div>
         <div> {blog.user.name} </div>
         <button onClick={erase}>delete</button>
       </div>

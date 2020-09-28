@@ -2,9 +2,10 @@ import axios from 'axios'
 const baseUrl = '/api/blogs'
 
 let token = null
+console.log(token)
 const getAll = async () => {
   const request = await axios.get(baseUrl)
-  request.data.sort((a,b)=>b.likes-a.likes)
+  request.data.sort((a,b) => b.likes-a.likes)
   console.log('getBlogs', request.data)
   return request.data
 }

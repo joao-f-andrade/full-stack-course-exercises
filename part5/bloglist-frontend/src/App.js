@@ -23,10 +23,10 @@ const App = () => {
   }, [])
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
-    console.log('logged user',loggedUserJSON)
+    console.log('logged user', loggedUserJSON)
     if (loggedUserJSON) {
       const newUser = JSON.parse(loggedUserJSON)
-            console.log('new user', newUser)
+      console.log('new user', newUser)
       setUser(newUser)
     }
   }, [])
@@ -37,7 +37,7 @@ const App = () => {
         username, password
       })
       setUser(user)
-      console.log('newUser',user)
+      console.log('newUser', user)
       user.token = blogService.setToken(user.token)
       setUsername('')
       setPassword('')

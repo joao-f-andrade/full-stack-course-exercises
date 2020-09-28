@@ -20,7 +20,7 @@ const LoginForm = ({
       <input
         type="password"
         name="Password"
-          onChange={handlePassChange}
+        onChange={handlePassChange}
       />
     </div>
     <button type="submit">login</button>
