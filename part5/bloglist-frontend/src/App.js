@@ -26,6 +26,7 @@ const App = () => {
     console.log('logged user', loggedUserJSON)
     if (loggedUserJSON) {
       const newUser = JSON.parse(loggedUserJSON)
+      newUser.token =  blogService.setToken(newUser.token)
       console.log('new user', newUser)
       setUser(newUser)
     }
@@ -38,12 +39,12 @@ const App = () => {
       })
       setUser(user)
       console.log('newUser', user)
-      user.token = blogService.setToken(user.token)
       setUsername('')
       setPassword('')
       window.localStorage.setItem(
         'loggedUser', JSON.stringify(user)
       )
+      user.token = blogService.setToken(user.token)
     } catch (exception) {
       setErrorMessage('Wrong credentials')
       setTimeout(() => {
@@ -127,7 +128,7 @@ const App = () => {
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} handleLike={handleLike} handleDelete={handleDelete} />
           )}
-          <Togglable buttonLabel='Create new blog' ref={newBlogFormRef}>
+          <Togglable buttonLabel='Create new blog' className='newBlogForm' ref={newBlogFormRef}>
             <NewBlogForm
               createNewBlog={createNewBlog}
             />
