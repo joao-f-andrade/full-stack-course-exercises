@@ -40,7 +40,7 @@ const Blog = ({
         <div> {blog.url} </div>
         <div> likes {blog.likes} <button onClick={like} className='btnLike'>like</button></div>
         <div> {blog.user.name} </div>
-        <button onClick={erase}>delete</button>
+        <button onClick={erase} className='btnDelete' >delete</button>
       </div>
     </div>
   )

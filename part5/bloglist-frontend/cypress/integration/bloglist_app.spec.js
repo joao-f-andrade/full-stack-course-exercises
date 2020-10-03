@@ -4,6 +4,9 @@ describe('Bloglist app', function () {
     cy.request('POST', 'http://localhost:3001/api/users/', {
       username: 'root', password: 'password', name: 'rootname'
     })
+    cy.request('POST', 'http://localhost:3001/api/users/', {
+      username: 'root2', password: 'password', name: 'rootname2'
+    })
     cy.visit('http://localhost:3000')
   })
 
@@ -29,23 +32,21 @@ describe('Bloglist app', function () {
   })
   describe.only('when logged in', function () {
     beforeEach(function () {
-      console.log('ola')
       cy.request('POST', 'http://localhost:3001/api/login', { username: 'root', password: 'password' }).then(response => {
-        console.log('storage', response.body)
         localStorage.setItem('loggedUser', JSON.stringify(response.body))
         cy.visit('http://localhost:3000')
       })
     })
     it('a blog can be created', function () {
-      console.log('adeus', localStorage.getItem('loggedUser'))
 
       cy.contains('Create new blog').click()
-      cy.get('.titleInput').type('alohfghfghfgh')
-      cy.get('.authorInput').type('author')
-      cy.get('.urlInput').type('urfgl')
+      cy.get('.titleInput').type('Example title')
+      cy.get('.authorInput').type('Example author')
+      cy.get('.urlInput').type('Example url')
       cy.get('.submit').click()
-      cy.contains('alo')
-      console.log('a blog can be created')
+      cy.contains('Example title')
+      cy.contains('Example author')
+      cy.contains('Example url')
     })
     describe('and a note exists', function () {
       beforeEach(function () {
@@ -57,6 +58,39 @@ describe('Bloglist app', function () {
       })
       it('a note shows', function () {
         cy.contains('Medium')
+        cy.contains('Johny Cash')
+        cy.contains('www.medium.com')
+      })
+      it('a user can like a blog', function () {
+        cy.get('.btnView')
+          .click()
+        cy.get('.btnLike')
+          .click()
+        cy.get('.extraInfo')
+          .contains('likes 1')
+      })
+      it('a user can delete a blog', function () {
+        cy.get('.btnView')
+          .click()
+        cy.get('.btnDelete')
+          .click()
+        cy.on('window.confirm', () => true)
+        cy.contains('Medium').should('not.exist')
+        cy.contains('Johny Cash').should('not.exist')
+        cy.contains('www.medium.com').should('not.exist')
+      })
+      it('a user cant delete another users blog', function () {
+        cy.contains('Log out').click()
+        cy.login({
+          username: 'root2',
+          password: 'password'
+        })
+        cy.get('.btnView').click()
+        cy.get('.btnDelete').click()
+        cy.contains('Operation failed')
+        cy.contains('Medium')
+        cy.contains('Johny Cash')
+        cy.contains('www.medium.com')
       })
     })
   })
