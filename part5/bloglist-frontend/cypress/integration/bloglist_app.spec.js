@@ -30,7 +30,7 @@ describe('Bloglist app', function () {
       cy.get('app').should('not.contain', 'logout')
     })
   })
-  describe.only('when logged in', function () {
+  describe('when logged in', function () {
     beforeEach(function () {
       cy.request('POST', 'http://localhost:3001/api/login', { username: 'root', password: 'password' }).then(response => {
         localStorage.setItem('loggedUser', JSON.stringify(response.body))
@@ -38,7 +38,6 @@ describe('Bloglist app', function () {
       })
     })
     it('a blog can be created', function () {
-
       cy.contains('Create new blog').click()
       cy.get('.titleInput').type('Example title')
       cy.get('.authorInput').type('Example author')
@@ -53,7 +52,8 @@ describe('Bloglist app', function () {
         cy.createBlog({
           title: 'Medium',
           author: 'Johny Cash',
-          url: 'www.medium.com'
+          url: 'www.medium.com',
+          likes: 4
         })
       })
       it('a note shows', function () {
@@ -67,7 +67,7 @@ describe('Bloglist app', function () {
         cy.get('.btnLike')
           .click()
         cy.get('.extraInfo')
-          .contains('likes 1')
+          .contains('likes 5')
       })
       it('a user can delete a blog', function () {
         cy.get('.btnView')
@@ -91,6 +91,45 @@ describe('Bloglist app', function () {
         cy.contains('Medium')
         cy.contains('Johny Cash')
         cy.contains('www.medium.com')
+      })
+      it('blogs are ordered by number of likes', function () {
+        cy.createBlog({
+          title: 'Medium10',
+          author: 'Johny Cash',
+          url: 'www.medium.com',
+          likes: 10
+        })
+        cy.createBlog({
+          title: 'Medium12',
+          author: 'Johny Cash',
+          url: 'www.medium.com',
+          likes: 12
+        })
+        cy.createBlog({
+          title: 'Medium11',
+          author: 'Johny Cash',
+          url: 'www.medium.com',
+          likes: 11
+        })
+        cy.get('.btnLike')
+          .parent()
+          .invoke('text')
+          .then(str => {
+            let re = /(\w+)\s(\w+)/
+            let array = str.split(re)
+            let numArray = []
+            array.forEach((word) => {
+              if (!isNaN(parseInt(word))) { numArray.push(parseInt(word))}
+            })
+            function arrayEquals(a, b) {
+              return Array.isArray(a) &&
+                Array.isArray(b) &&
+                a.length === b.length &&
+                a.every((val, index) => val === b[index])
+            }
+            return  arrayEquals(numArray, [12,11,10,4])
+          })
+          .should('equal',true)
       })
     })
   })
