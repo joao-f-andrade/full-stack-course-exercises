@@ -26,7 +26,7 @@ const App = () => {
     console.log('logged user', loggedUserJSON)
     if (loggedUserJSON) {
       const newUser = JSON.parse(loggedUserJSON)
-      newUser.token =  blogService.setToken(newUser.token)
+      newUser.token = blogService.setToken(newUser.token)
       console.log('new user', newUser)
       setUser(newUser)
     }
@@ -123,8 +123,7 @@ const App = () => {
         <div>
           <h2>blogs</h2>
           <Notification message={successMessage} />
-          <p> {user.name} <button type='button' onClick={logOut} >Log out</button>
-          </p>
+          <p> {user.name} <button type='button' onClick={logOut} >Log out</button> </p>
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} handleLike={handleLike} className='btnLogOut' handleDelete={handleDelete} />
           )}
