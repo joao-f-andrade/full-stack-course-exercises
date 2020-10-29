@@ -5,10 +5,14 @@ import { votingMessage } from '../reducers/messageReducer'
 
 const AnecdoteList = () => {
   const anecdotes = useSelector(state => state.anecdotes)
+  const filter = useSelector(state => state.filter)
   const dispatch = useDispatch()
+  const filteredAnecdotes = filter === '' ?
+    anecdotes :
+    anecdotes.filter(anecdote => anecdote.content.toLowerCase().includes(filter.toLowerCase()))
   return (
     <div>
-      {anecdotes.map(anecdote =>
+      {filteredAnecdotes.map(anecdote =>
         <div key={anecdote.id}>
           <div>
             {anecdote.content}
@@ -18,7 +22,7 @@ const AnecdoteList = () => {
             <button onClick={() => {
               dispatch(vote(anecdote.id))
               dispatch(votingMessage(anecdotes.find(n => n.id === anecdote.id)))
-              }}>vote</button>
+            }}>vote</button>
           </div>
         </div>
       )}
