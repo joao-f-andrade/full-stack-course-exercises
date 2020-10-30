@@ -1,6 +1,6 @@
 const filterReducer = (state = '', action) => {
   switch (action.type) {
-    case ('CreateFilter'):
+    case ('CREATE_FILTER'):
       return action.data
     default:
       return state
@@ -9,7 +9,7 @@ const filterReducer = (state = '', action) => {
 
 export const createFilter = (filter) => {
   return {
-    type: 'CreateFilter',
+    type: 'CREATE_FILTER',
     data: filter
   }
 }

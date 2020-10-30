@@ -2,14 +2,14 @@ const messageReducer = (state = '', action) => {
   console.log('state now: ', state)
   console.log('action', action)
   switch (action.type) {
-    case 'NewAnecdote':
+    case 'NEW_ANECDOTE':
       return `You created: '${action.data.content}'`
-    case 'VoteMessage':
+    case 'VOTE_MESSAGE':
       return `You voted:
        '${action.data.content}',
         ${action.data.votes + 1}
         ${action.data.votes + 1 === 1 ? 'vote' : 'votes'}`
-    case 'ClearMessage':
+    case 'CLEAR_MESSAGE':
       return state === action.data? '' : state
     default:
       return state
@@ -17,18 +17,18 @@ const messageReducer = (state = '', action) => {
 }
 export const createMessage = () => {
   return {
-    type: 'CreateMessage'
+    type: 'CREATE_MESSAGE'
   }
 }
 export const votingMessage = (anecdote) => {
   return {
-    type: 'VoteMessage',
+    type: 'VOTE_MESSAGE',
     data: anecdote
   }
 }
 export const clearMessage = (notification) => {
   return {
-    type: 'ClearMessage',
+    type: 'CLEAR_MESSAGE',
     data: notification
   }
 }
