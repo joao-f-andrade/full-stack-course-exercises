@@ -2,34 +2,30 @@ const messageReducer = (state = '', action) => {
   console.log('state now: ', state)
   console.log('action', action)
   switch (action.type) {
-    case 'NEW_ANECDOTE':
-      return `You created: '${action.data.content}'`
-    case 'VOTE_MESSAGE':
-      return `You voted:
-       '${action.data.content}',
-        ${action.data.votes + 1}
-        ${action.data.votes + 1 === 1 ? 'vote' : 'votes'}`
+    case 'SET_NOTIFICATION':
+      return action.data
     case 'CLEAR_MESSAGE':
-      return state === action.data? '' : state
+      return ''
     default:
       return state
   }
+
 }
-export const createMessage = () => {
-  return {
-    type: 'CREATE_MESSAGE'
+export const setNotification = (message, timer) => {
+  return async dispatch => {
+    await dispatch({
+      type: 'SET_NOTIFICATION',
+      data: message
+    })
+    setTimeout(() => dispatch({
+      type: 'CLEAR_MESSAGE'
+    }), timer * 1000)
   }
 }
-export const votingMessage = (anecdote) => {
+export const clearMessage = () => {
   return {
-    type: 'VOTE_MESSAGE',
-    data: anecdote
+    type: 'CLEAR_MESSAGE'
   }
 }
-export const clearMessage = (notification) => {
-  return {
-    type: 'CLEAR_MESSAGE',
-    data: notification
-  }
-}
+
 export default messageReducer
