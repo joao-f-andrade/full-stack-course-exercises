@@ -8,12 +8,12 @@ const Notification = () => {
     padding: 10,
     borderWidth: 1
   }
-  if (notification.message === '') {
+  if (!notification) {
     style.display = 'none'
 }
   return (
     <div style={style}>
-      {notification.message}
+      {notification}
     </div>
   )
 }

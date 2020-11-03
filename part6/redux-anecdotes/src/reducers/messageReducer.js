@@ -1,36 +1,30 @@
-const messageReducer = (state = {id:'',message:''}, action) => {
+const messageReducer = (state = null, action) => {
   console.log('state now: ', state)
   console.log('action', action)
   switch (action.type) {
     case 'SET_NOTIFICATION':
-      return action.data
+      return action.message
     case 'CLEAR_MESSAGE':
-      return action.data.id === state.id
-        ? {message:'',id:''}
-        : state
+      return null
     default:
       return state
   }
 
 }
-let nextNotificationId = 0
+let timeoutId
 
 export const setNotification = (message, timer) => {
   return async dispatch => {
-    const id = nextNotificationId++
     await dispatch({
       type: 'SET_NOTIFICATION',
-      data: {
-        message: message,
-        id: id
-      }
+      message
     })
-    setTimeout(() => dispatch({
-      type: 'CLEAR_MESSAGE',
-      data: {
-        message: message,
-        id: id
-      }
+
+    if (timeoutId) {
+      clearTimeout(timeoutId)
+    }
+    timeoutId = setTimeout(() => dispatch({
+      type: 'CLEAR_MESSAGE'
     }), timer * 1000)
   }
 }
