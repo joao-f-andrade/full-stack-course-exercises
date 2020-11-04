@@ -2,9 +2,10 @@ import React from 'react'
 import { useField } from '../hooks/index'
 
 const CreateNew = (props) => {
-  const content = useField('content')
-  const info = useField('info')
-  const author = useField('author')
+  const { 'clearState': clearContent, ...content } = useField('content')
+  const { 'clearState': clearInfo, ...info } = useField('info')
+  const { 'clearState': clearAuthor, ...author } = useField('author')
+
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -17,9 +18,9 @@ const CreateNew = (props) => {
   }
 
   const resetAll = () => {
-    content.clearState()
-    info.clearState()
-    author.clearState()
+    clearContent()
+    clearInfo()
+    clearAuthor()
   }
 
   return (
