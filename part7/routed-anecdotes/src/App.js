@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import {
-  Switch, Route, useRouteMatch, useParams
+  Switch, Route, useRouteMatch, useHistory
 } from "react-router-dom"
 import AnecdoteList from './components/AnecdoteList'
 import Footer from './components/Footer'
@@ -29,6 +29,7 @@ const App = () => {
 
   const [notification, setNotification] = useState('')
 
+  const history = useHistory()
   const match = useRouteMatch('/anecdotes/:id')
   const anecdote = match
     ? anecdotes.find(anecdote => Number(anecdote.id) === Number(match.params.id))
@@ -37,6 +38,9 @@ const App = () => {
   const addNew = (anecdote) => {
     anecdote.id = (Math.random() * 10000).toFixed(0)
     setAnecdotes(anecdotes.concat(anecdote))
+    setNotification(`a new Anecdote ${anecdote.content} created!`)
+    setTimeout(()=>setNotification(''),10000)
+    history.push('/')
   }
 
   const anecdoteById = (id) =>
@@ -57,6 +61,7 @@ const App = () => {
     <div>
       <h1>Software anecdotes</h1>
       <Menu />
+      <div>{notification}</div>
 
       <Switch>
         <Route path='/about'>
