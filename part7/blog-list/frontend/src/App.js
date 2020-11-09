@@ -14,10 +14,9 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [errorMessage, setErrorMessage] = useState(null)
 
   const dispatch = useDispatch()
-  const successMessage = useSelector(state => state)
+  const message = useSelector(state => state)
   const newBlogFormRef = useRef()
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -49,10 +48,7 @@ const App = () => {
       )
       user.token = blogService.setToken(user.token)
     } catch (exception) {
-      setErrorMessage('Wrong credentials')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      dispatch(setNotification('Wrong credentials',5))
     }
   }
   const handleLike = async (blog) => {
@@ -68,18 +64,12 @@ const App = () => {
         const newBLogs = await blogService.getAll()
         setBlogs(newBLogs)
       } catch (exception) {
-        setErrorMessage('Operation failed')
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
+        dispatch(setNotification('Operation failed',5))
         console.log(exception)
       }
     }
     else {
-      setErrorMessage('Operation aborted')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      dispatch(setNotification('Operation aborted',5))
     }
 
   }
@@ -97,10 +87,7 @@ const App = () => {
       console.log('saved blog', newBlog)
       dispatch(setNotification(`${newBlog.title} by ${newBlog.author} added`, 5))
     } catch (exception) {
-      setErrorMessage('invalid blog')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      dispatch(setNotification('invalid blog',5))
       console.log(exception)
     }
     blogService.getAll().then(blogs =>
@@ -117,12 +104,11 @@ const App = () => {
 
   return (
     <div>
-      <Notification message={errorMessage} />
+      <Notification message={message} />
       {user === null ?
         loginForm() :
         <div>
           <h2>blogs</h2>
-          <Notification message={successMessage} />
           <p> {user.name} <button type='button' onClick={logOut} >Log out</button> </p>
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} handleLike={handleLike} className='btnLogOut' handleDelete={handleDelete} />
