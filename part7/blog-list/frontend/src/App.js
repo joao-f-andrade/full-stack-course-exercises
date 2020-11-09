@@ -6,6 +6,8 @@ import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import NewBlogForm from './components/NewBlogForm'
 import Togglable from './components/Togglable'
+import { useDispatch, useSelector } from 'react-redux'
+import { setNotification } from './reducers/notificationReducer'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -13,8 +15,9 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
-  const [successMessage, setSuccessMessage] = useState(null)
 
+  const dispatch = useDispatch()
+  const successMessage = useSelector(state => state)
   const newBlogFormRef = useRef()
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -92,10 +95,7 @@ const App = () => {
         user.token, blogObject
       )
       console.log('saved blog', newBlog)
-      setSuccessMessage(`${newBlog.title} by ${newBlog.author} added`)
-      setTimeout(() => {
-        setSuccessMessage(null)
-      }, 5000)
+      dispatch(setNotification(`${newBlog.title} by ${newBlog.author} added`, 5))
     } catch (exception) {
       setErrorMessage('invalid blog')
       setTimeout(() => {
