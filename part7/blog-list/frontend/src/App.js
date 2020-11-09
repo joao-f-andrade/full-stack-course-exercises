@@ -6,7 +6,7 @@ import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import NewBlogForm from './components/NewBlogForm'
 import Togglable from './components/Togglable'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { setNotification } from './reducers/notificationReducer'
 
 const App = () => {
@@ -16,7 +16,6 @@ const App = () => {
   const [user, setUser] = useState(null)
 
   const dispatch = useDispatch()
-  const message = useSelector(state => state)
   const newBlogFormRef = useRef()
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -104,7 +103,7 @@ const App = () => {
 
   return (
     <div>
-      <Notification message={message} />
+      <Notification />
       {user === null ?
         loginForm() :
         <div>
