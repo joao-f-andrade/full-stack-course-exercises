@@ -6,20 +6,21 @@ import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import NewBlogForm from './components/NewBlogForm'
 import Togglable from './components/Togglable'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setNotification } from './reducers/notificationReducer'
+import { addBlog, initializeBlogs } from './reducers/blogReducer'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
   const dispatch = useDispatch()
+  const blogs = useSelector(state => state.blogs)
   const newBlogFormRef = useRef()
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs(blogs)
+      dispatch(initializeBlogs(blogs))
     )
   }, [])
   useEffect(() => {
@@ -53,7 +54,7 @@ const App = () => {
   const handleLike = async (blog) => {
     await blogService.likeBlog(user.token, blog)
     const newBLogs = await blogService.getAll()
-    setBlogs(newBLogs)
+    dispatch(addBlog(newBLogs))
   }
   const handleDelete = async (blog) => {
     const confirmation = window.confirm(`are you sure you want to permmanently delete ${blog.title}?`)
@@ -61,7 +62,7 @@ const App = () => {
       try {
         await blogService.deleteBlog(user.token, blog)
         const newBLogs = await blogService.getAll()
-        setBlogs(newBLogs)
+        dispatch(addBlog(newBLogs))
       } catch (exception) {
         dispatch(setNotification('Operation failed',5))
         console.log(exception)
@@ -90,7 +91,7 @@ const App = () => {
       console.log(exception)
     }
     blogService.getAll().then(blogs =>
-      setBlogs(blogs)
+      dispatch(addBlog(blogs))
     )
   }
   const loginForm = () => (
