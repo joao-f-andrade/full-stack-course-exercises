@@ -6,22 +6,26 @@ import NewBlogForm from './components/NewBlogForm'
 import Togglable from './components/Togglable'
 import Users from './components/Users'
 import blogService from './services/blogs'
+import usersService from './services/users'
 import { useDispatch, useSelector } from 'react-redux'
 import { initializeBlogs } from './reducers/blogReducer'
-import { addUser } from './reducers/userReducer'
+import { addCurrentUser, addAllUsers } from './reducers/userReducer'
 import {
   Switch,
   Route,
 } from "react-router-dom"
 
 const App = () => {
-  const user = useSelector(state => state.user)
+  const user = useSelector(state => state.user.current)
 
   const dispatch = useDispatch()
   const newBlogFormRef = useRef()
   useEffect(() => {
     blogService.getAll().then(blogs =>
       dispatch(initializeBlogs(blogs))
+    )
+    usersService.getAll().then(users =>
+      dispatch(addAllUsers(users))
     )
   }, [dispatch])
   useEffect(() => {
@@ -31,12 +35,12 @@ const App = () => {
       const newUser = JSON.parse(loggedUserJSON)
       newUser.token = blogService.setToken(newUser.token)
       console.log('new user', newUser)
-      dispatch(addUser(newUser))
+      dispatch(addCurrentUser(newUser))
     }
   }, [dispatch])
 
   const logOut = () => {
-    dispatch(addUser(null))
+    dispatch(addCurrentUser(null))
     window.localStorage.removeItem('loggedUser')
   }
   const mainPage = () => (

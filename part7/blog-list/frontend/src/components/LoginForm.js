@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import loginService from '../services/login'
 import { setNotification } from '../reducers/notificationReducer'
 import { useDispatch } from 'react-redux'
-import { addUser } from '../reducers/userReducer'
+import { addCurrentUser } from '../reducers/userReducer'
 import blogService from '../services/blogs'
 
 const LoginForm = () => {
@@ -15,7 +15,7 @@ const LoginForm = () => {
       const user = await loginService.login({
         username, password
       })
-      dispatch(addUser(user))
+      dispatch(addCurrentUser(user))
       console.log('newUser', user)
       setUsername('')
       setPassword('')
