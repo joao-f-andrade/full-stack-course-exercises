@@ -77,23 +77,6 @@ const App = () => {
     setUser(null)
     window.localStorage.removeItem('loggedUser')
   }
-  const createNewBlog = async (blogObject) => {
-    newBlogFormRef.current.toggleVisibility()
-    console.log('token', user.token)
-    try {
-      const newBlog = await blogService.saveBlog(
-        user.token, blogObject
-      )
-      console.log('saved blog', newBlog)
-      dispatch(setNotification(`${newBlog.title} by ${newBlog.author} added`, 5))
-    } catch (exception) {
-      dispatch(setNotification('invalid blog',5))
-      console.log(exception)
-    }
-    blogService.getAll().then(blogs =>
-      dispatch(addBlog(blogs))
-    )
-  }
   const loginForm = () => (
     <LoginForm
       handleSubmit={handleLogin}
@@ -115,7 +98,8 @@ const App = () => {
           )}
           <Togglable buttonLabel='Create new blog' className='newBlogForm' ref={newBlogFormRef}>
             <NewBlogForm
-              createNewBlog={createNewBlog}
+              newBlogFormRef = {newBlogFormRef}
+              user = {user}
             />
           </Togglable>
         </div>
