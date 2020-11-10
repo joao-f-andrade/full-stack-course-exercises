@@ -13,7 +13,7 @@ const Blog = ({ blog }) => {
     marginBottom: 5
   }
   const dispatch = useDispatch()
-  const user = useSelector(state => state.user)
+  const user = useSelector(state => state.user.current)
   const [visible, setVisible] = useState(false)
 
   const hideWhenVisible = { display: visible ? 'none' : '' }
