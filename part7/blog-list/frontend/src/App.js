@@ -18,7 +18,7 @@ const App = () => {
     blogService.getAll().then(blogs =>
       dispatch(initializeBlogs(blogs))
     )
-  }, [])
+  }, [dispatch])
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
     console.log('logged user', loggedUserJSON)
@@ -28,7 +28,7 @@ const App = () => {
       console.log('new user', newUser)
       dispatch(addUser(newUser))
     }
-  }, [])
+  }, [dispatch])
 
   const logOut = () => {
     dispatch(addUser(null))
