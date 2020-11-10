@@ -5,7 +5,7 @@ const BlogList = ({ blogs, handleDelete, handleLike }) => {
   return (
     <div>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} handleLike={handleLike} className='btnLogOut' handleDelete={handleDelete} />
+        <Blog key={blog.id} blog={blog} handleLike={handleLike} handleDelete={handleDelete} />
       )}
     </div>
   )
