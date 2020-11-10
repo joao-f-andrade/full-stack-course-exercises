@@ -41,7 +41,6 @@ const App = () => {
   }
   const mainPage = () => (
     <div>
-      <h2>blogs</h2>
       <BlogList />
       <Togglable buttonLabel='Create new blog' className='newBlogForm' ref={newBlogFormRef}>
         <NewBlogForm
@@ -54,10 +53,15 @@ const App = () => {
 
   return (
     <div>
+      <h1>Blogs</h1>
       <Notification />
       {user === null ?
         <LoginForm /> :
         <div>
+          <div>
+            <p> {`${user.name} is logged in`}  </p>
+            <button type='button' onClick={logOut} >Log out</button>
+          </div>
           <Switch>
             <Route path='/users'>
               <Users />
@@ -66,7 +70,6 @@ const App = () => {
               {mainPage()}
             </Route>
           </Switch>
-          <p> {user.name} <button type='button' onClick={logOut} >Log out</button> </p>
         </div>
       }
     </div>
