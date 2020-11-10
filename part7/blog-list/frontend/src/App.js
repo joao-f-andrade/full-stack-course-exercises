@@ -9,14 +9,14 @@ import Togglable from './components/Togglable'
 import { useDispatch, useSelector } from 'react-redux'
 import { setNotification } from './reducers/notificationReducer'
 import { addBlog, initializeBlogs } from './reducers/blogReducer'
+import { addUser } from './reducers/userReducer'
 
 const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
+  const user = useSelector(state => state.user)
 
   const dispatch = useDispatch()
-  const blogs = useSelector(state => state.blogs)
   const newBlogFormRef = useRef()
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -30,7 +30,7 @@ const App = () => {
       const newUser = JSON.parse(loggedUserJSON)
       newUser.token = blogService.setToken(newUser.token)
       console.log('new user', newUser)
-      setUser(newUser)
+      dispatch(addUser(newUser))
     }
   }, [])
   const handleLogin = async (event) => {
@@ -39,7 +39,7 @@ const App = () => {
       const user = await loginService.login({
         username, password
       })
-      setUser(user)
+      dispatch(addUser(user))
       console.log('newUser', user)
       setUsername('')
       setPassword('')
@@ -51,30 +51,9 @@ const App = () => {
       dispatch(setNotification('Wrong credentials', 5))
     }
   }
-  const handleLike = async (blog) => {
-    await blogService.likeBlog(user.token, blog)
-    const newBLogs = await blogService.getAll()
-    dispatch(addBlog(newBLogs))
-  }
-  const handleDelete = async (blog) => {
-    const confirmation = window.confirm(`are you sure you want to permmanently delete ${blog.title}?`)
-    if (confirmation === true) {
-      try {
-        await blogService.deleteBlog(user.token, blog)
-        const newBLogs = await blogService.getAll()
-        dispatch(addBlog(newBLogs))
-      } catch (exception) {
-        dispatch(setNotification('Operation failed', 5))
-        console.log(exception)
-      }
-    }
-    else {
-      dispatch(setNotification('Operation aborted', 5))
-    }
 
-  }
   const logOut = () => {
-    setUser(null)
+    dispatch(addUser(null))
     window.localStorage.removeItem('loggedUser')
   }
   const loginForm = () => (
@@ -93,7 +72,7 @@ const App = () => {
         <div>
           <h2>blogs</h2>
           <p> {user.name} <button type='button' onClick={logOut} >Log out</button> </p>
-          <BlogList blogs={blogs} handleLike={handleLike} handleDelete={handleDelete} />
+          <BlogList />
           <Togglable buttonLabel='Create new blog' className='newBlogForm' ref={newBlogFormRef}>
             <NewBlogForm
               newBlogFormRef={newBlogFormRef}
