@@ -51,7 +51,6 @@ const App = () => {
           newBlogFormRef={newBlogFormRef}
           user={user}
         />
-      <BlogList />
       </Togglable>
     </div>
   )
