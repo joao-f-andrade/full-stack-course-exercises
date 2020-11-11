@@ -5,8 +5,7 @@ import { useParams } from 'react-router-dom'
 const UserView = () => {
   const id = useParams().id
   const allUsers = useSelector(state => state.user.all)
-  console.log('id', id, 'alluasers', allUsers)
-  console.log(useSelector(state => state.user))
+  
   if (!allUsers) {
     return null
   }

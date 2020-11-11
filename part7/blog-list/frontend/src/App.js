@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import BlogList from './components/BlogList'
+import Blog from './components/Blog'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import NewBlogForm from './components/NewBlogForm'
@@ -11,15 +12,12 @@ import usersService from './services/users'
 import { useDispatch, useSelector } from 'react-redux'
 import { initializeBlogs } from './reducers/blogReducer'
 import { addCurrentUser, addAllUsers } from './reducers/userReducer'
-import {
-  Switch,
-  Route,
-} from "react-router-dom"
+import { Switch, Route } from "react-router-dom"
 
 const App = () => {
   const user = useSelector(state => state.user.current)
-
   const dispatch = useDispatch()
+  
   const newBlogFormRef = useRef()
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -29,6 +27,7 @@ const App = () => {
       dispatch(addAllUsers(users))
     )
   }, [dispatch])
+  
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
     console.log('logged user', loggedUserJSON)
@@ -52,6 +51,7 @@ const App = () => {
           newBlogFormRef={newBlogFormRef}
           user={user}
         />
+      <BlogList />
       </Togglable>
     </div>
   )
@@ -70,9 +70,12 @@ const App = () => {
           <Switch>
             <Route path='/users/:id' >
               <UserView />
-              </Route>
+            </Route>
             <Route path='/users'>
               <UsersList />
+            </Route>
+            <Route path='/blogs/:id'>
+              <Blog />
             </Route>
             <Route path='/'>
               {mainPage()}

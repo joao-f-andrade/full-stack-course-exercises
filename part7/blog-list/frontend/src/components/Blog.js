@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { addBlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 import blogService from '../services/blogs'
+import { useParams } from 'react-router-dom'
 
-const Blog = ({ blog }) => {
+const Blog = () => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -13,11 +14,10 @@ const Blog = ({ blog }) => {
     marginBottom: 5
   }
   const dispatch = useDispatch()
+  const id = useParams().id
+  const blog = useSelector(state => state.blogs.find(blog => blog.id === id))
+  console.log('blog', blog)
   const user = useSelector(state => state.user.current)
-  const [visible, setVisible] = useState(false)
-
-  const hideWhenVisible = { display: visible ? 'none' : '' }
-  const showWhenVisible = { display: visible ? '' : 'none' }
 
   const handleLike = async (blog) => {
     await blogService.likeBlog(user.token, blog)
@@ -41,9 +41,7 @@ const Blog = ({ blog }) => {
     }
 
   }
-  const toggleVisibility = () => {
-    setVisible(!visible)
-  }
+
   const like = (event) => {
     event.preventDefault()
     handleLike(blog)
@@ -52,20 +50,17 @@ const Blog = ({ blog }) => {
     event.preventDefault()
     handleDelete(blog)
   }
+  if (!blog){return null}
 
   return (
     <div className='blog' style={blogStyle}>
-      <div className='mainInfo'>
+      <h2>
         {blog.title} {blog.author}
-        <button style={hideWhenVisible} onClick={toggleVisibility} className='btnView'>view</button>
-        <button style={showWhenVisible} onClick={toggleVisibility}>hide</button>
-      </div>
-      <div style={showWhenVisible} className='extraInfo'>
-        <div> {blog.url} </div>
+      </h2>
+        <div><a href={blog.url}> {blog.url} </a></div>
         <div> likes {blog.likes} <button onClick={like} className='btnLike'>like</button></div>
         <div> {blog.user.name} </div>
-        <button onClick={erase} className='btnDelete' >delete</button>
-      </div>
+        <button onClick={erase} className='btnDelete' >delete</button>  
     </div>
   )
 }
