@@ -4,7 +4,7 @@ import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import NewBlogForm from './components/NewBlogForm'
 import Togglable from './components/Togglable'
-import Users from './components/Users'
+import Users from './components/UsersList'
 import blogService from './services/blogs'
 import usersService from './services/users'
 import { useDispatch, useSelector } from 'react-redux'
@@ -67,6 +67,9 @@ const App = () => {
             <button type='button' onClick={logOut} >Log out</button>
           </div>
           <Switch>
+            <Route path='/users/:id' >
+              <h2>coco</h2>
+              </Route>
             <Route path='/users'>
               <Users />
             </Route>
