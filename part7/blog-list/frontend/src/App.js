@@ -4,7 +4,8 @@ import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import NewBlogForm from './components/NewBlogForm'
 import Togglable from './components/Togglable'
-import Users from './components/UsersList'
+import UsersList from './components/UsersList'
+import UserView from './components/UserView'
 import blogService from './services/blogs'
 import usersService from './services/users'
 import { useDispatch, useSelector } from 'react-redux'
@@ -68,10 +69,10 @@ const App = () => {
           </div>
           <Switch>
             <Route path='/users/:id' >
-              <h2>coco</h2>
+              <UserView />
               </Route>
             <Route path='/users'>
-              <Users />
+              <UsersList />
             </Route>
             <Route path='/'>
               {mainPage()}
