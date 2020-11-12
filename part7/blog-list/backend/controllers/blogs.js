@@ -67,7 +67,9 @@ blogsRouter.post('/:id/comments', async (request, response) => {
     }
     return decoded
   })
-
+  if (!request.body.comment || typeof request.body.comment !== 'string') {
+    return response.status(401).json({ error: 'comment invalid' })
+  }
   const blog = await Blog.findById(request.params.id)
 
   const newComments = { comments: [...blog.comments, request.body.comment] }
