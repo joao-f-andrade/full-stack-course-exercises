@@ -4,6 +4,7 @@ import { setNotification } from '../reducers/notificationReducer'
 import { useDispatch } from 'react-redux'
 import { addCurrentUser } from '../reducers/userReducer'
 import blogService from '../services/blogs'
+import Notification from './Notification'
 
 const LoginForm = () => {
   const dispatch = useDispatch()
@@ -33,6 +34,7 @@ const LoginForm = () => {
 return (
   <form onSubmit={handleSubmit}>
     <h2>Log In</h2>
+    <Notification />
     <div>
       username
       <input
