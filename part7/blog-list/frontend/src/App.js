@@ -17,6 +17,7 @@ import { Switch, Route, Link } from "react-router-dom"
 const App = () => {
   const user = useSelector(state => state.user.current)
   const dispatch = useDispatch()
+  const blogs = useSelector(state => state.blogs)
 
   const newBlogFormRef = useRef()
   useEffect(() => {
@@ -27,7 +28,11 @@ const App = () => {
       dispatch(addAllUsers(users))
     )
   }, [dispatch])
-
+  useEffect(() => {
+    usersService.getAll().then(users =>
+      dispatch(addAllUsers(users))
+    )
+  }, [dispatch,blogs])
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
     console.log('logged user', loggedUserJSON)
