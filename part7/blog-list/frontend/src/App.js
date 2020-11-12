@@ -66,6 +66,7 @@ const App = () => {
             <span> {`${user.name} is logged in`} <button type='button' onClick={logOut}>Log out</button> </span>
             <h1>Blogs</h1>
           </header>
+
           <Notification />
 
           <Switch>
