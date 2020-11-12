@@ -56,6 +56,7 @@ const NewBlogForm = ({  newBlogFormRef, user }) => {
           type="text"
           name="title"
           onChange={handleTitleChange}
+          value={newTitle}
         />
       </div>
       <div>
@@ -65,6 +66,7 @@ const NewBlogForm = ({  newBlogFormRef, user }) => {
           type="text"
           name="author"
           onChange={handleAuthorChange}
+          value={newAuthor}
         />
       </div>
       <div>
@@ -74,6 +76,7 @@ const NewBlogForm = ({  newBlogFormRef, user }) => {
           type="text"
           name="url"
           onChange={handleUrlChange}
+          value={newUrl}
         />
       </div>
       <button className='submit' type="submit">submit</button>

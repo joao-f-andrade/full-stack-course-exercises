@@ -28,6 +28,7 @@ const NewCommentForm = ({ id, user }) => {
 
   const submit = (event) => {
     event.preventDefault()
+    console.log(event)
     createNewComment(newComment,id)
     setNewComment('')
   }
@@ -39,6 +40,7 @@ const NewCommentForm = ({ id, user }) => {
         type="text"
         name="comment"
         onChange={handleChange}
+        value={newComment}
       />
       <button className='submit' type="submit">add comment</button>
 
