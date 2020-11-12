@@ -10,18 +10,20 @@ const Blog = require('../models/blog')
 
 beforeEach(async () => {
   // Initializes user and Db
-  await Blog.deleteMany({})
-
-  for (let blog of helper.initialBlogs) {
-    let blogObject = new Blog(blog)
-    await blogObject.save()
-  }
   await User.deleteMany({})
 
   const passwordHash = await bcrypt.hash('sekret', 10)
   const user = new User({ username: 'root', passwordHash })
 
   await user.save()
+  
+  await Blog.deleteMany({})
+
+  for (let blog of helper.initialBlogs) {
+    let blogObject = new Blog({ ...blog, user:user.id })
+    await blogObject.save()
+  }
+
 })
 
 describe('getting existing blogs', () => {
@@ -145,7 +147,7 @@ describe('posting blogs', () => {
 })
 
 describe('deleting blogs', () => {
-  test('blog is deleted by id', async () => {
+  test.only('blog is deleted by id', async () => {
     const userLoginInfo = {
       username: 'root',
       password: 'sekret'
@@ -171,6 +173,14 @@ describe('deleting blogs', () => {
 
 describe('updating likes of blogs', () => {
   test('updates the correct number of likes', async () => {
+    const userLoginInfo = {
+      username: 'root',
+      password: 'sekret'
+    }
+    const userLogin = await api
+      .post('/api/login/')
+      .send(userLoginInfo)
+    const token = (`bearer ${userLogin.body.token}`)
     const blogs = await helper.blogsInDb()
     const id = blogs[0].id
     const updatedBlog = {
@@ -183,6 +193,7 @@ describe('updating likes of blogs', () => {
 
     await api
       .put(`/api/blogs/${id}`)
+      .set('Authorization', token)
       .send(updatedBlog)
       .expect(200)
 
