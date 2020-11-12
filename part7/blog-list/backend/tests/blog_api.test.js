@@ -16,11 +16,11 @@ beforeEach(async () => {
   const user = new User({ username: 'root', passwordHash })
 
   await user.save()
-  
+
   await Blog.deleteMany({})
 
   for (let blog of helper.initialBlogs) {
-    let blogObject = new Blog({ ...blog, user:user.id })
+    let blogObject = new Blog({ ...blog, user: user.id })
     await blogObject.save()
   }
 
@@ -147,7 +147,7 @@ describe('posting blogs', () => {
 })
 
 describe('deleting blogs', () => {
-  test.only('blog is deleted by id', async () => {
+  test('blog is deleted by id', async () => {
     const userLoginInfo = {
       username: 'root',
       password: 'sekret'
@@ -180,16 +180,11 @@ describe('updating likes of blogs', () => {
     const userLogin = await api
       .post('/api/login/')
       .send(userLoginInfo)
+    console.log('userLoginbody', userLogin.body)
     const token = (`bearer ${userLogin.body.token}`)
     const blogs = await helper.blogsInDb()
     const id = blogs[0].id
-    const updatedBlog = {
-      id: id,
-      likes: blogs[0].likes + 2,
-      author: blogs[0].author,
-      title: blogs[0].title,
-      url: blogs[0].url
-    }
+    const updatedBlog = { ...blogs[0], likes: blogs[0].likes + 2 }
 
     await api
       .put(`/api/blogs/${id}`)
