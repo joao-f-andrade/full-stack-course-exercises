@@ -50,17 +50,24 @@ const Blog = () => {
     event.preventDefault()
     handleDelete(blog)
   }
-  if (!blog){return null}
+  if (!blog) { return null }
 
+  const displayComments = (comments) => {
+    const returnComments = (comment) => (
+      <li>{comment}</li>
+    )
+    return comments.map(comment => returnComments(comment))
+  }
   return (
     <div className='blog' style={blogStyle}>
       <h2>
         {blog.title} {blog.author}
       </h2>
-        <div><a href={blog.url}> {blog.url} </a></div>
-        <div> likes {blog.likes} <button onClick={like} className='btnLike'>like</button></div>
-        <div> {blog.user.name} </div>
-        <button onClick={erase} className='btnDelete' >delete</button>  
+      <div><a href={blog.url}> {blog.url} </a></div>
+      <div> likes {blog.likes} <button onClick={like} className='btnLike'>like</button></div>
+      <div> {blog.user.name} </div>
+      <ul>{displayComments(blog.comments)}</ul>
+      <button onClick={erase} className='btnDelete' >delete</button>
     </div>
   )
 }
