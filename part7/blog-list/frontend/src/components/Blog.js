@@ -4,6 +4,7 @@ import { addBlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 import blogService from '../services/blogs'
 import { useParams } from 'react-router-dom'
+import NewCommentForm from './NewCommentForm'
 
 const Blog = () => {
   const blogStyle = {
@@ -67,6 +68,7 @@ const Blog = () => {
       <div> likes {blog.likes} <button onClick={like} className='btnLike'>like</button></div>
       <div> {blog.user.name} </div>
       <ul>{displayComments(blog.comments)}</ul>
+      <NewCommentForm id={blog.id} user={user}/>
       <button onClick={erase} className='btnDelete' >delete</button>
     </div>
   )
