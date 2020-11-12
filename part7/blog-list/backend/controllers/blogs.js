@@ -58,5 +58,22 @@ blogsRouter.put('/:id', async (request, response) => {
   response.json(updatedBlog).status(200)
 })
 
+blogsRouter.post('/:id/comments', async (request, response) => {
+  // request.body é suposto ser {comments: '$comment'}
+  const token = request.token
+  jwt.verify(token, process.env.SECRET, (err, decoded) => {
+    if (err) {
+      return response.status(401).json({ error: 'token missing or invalid' })
+    }
+    return decoded
+  })
+
+  const blog = await Blog.findById(request.params.id)
+
+  const newComments = { comments: [...blog.comments, request.body.comment] }
+
+  const savedBlog = await Blog.findByIdAndUpdate(request.params.id, { $set: newComments }, { new: true })
+  response.json(savedBlog).status(200)
+})
 
 module.exports = blogsRouter

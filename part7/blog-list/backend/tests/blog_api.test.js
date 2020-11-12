@@ -59,7 +59,8 @@ describe('posting blogs', () => {
       'title': 'reddit',
       'author': 'redditors',
       'url': 'https://reddit.com',
-      'likes': 3
+      'likes': 3,
+      'comments': []
     }
     const oldBLogs = await helper.blogsInDb()
     await api
@@ -180,14 +181,13 @@ describe('updating likes of blogs', () => {
     const userLogin = await api
       .post('/api/login/')
       .send(userLoginInfo)
-    console.log('userLoginbody', userLogin.body)
     const token = (`bearer ${userLogin.body.token}`)
     const blogs = await helper.blogsInDb()
     const id = blogs[0].id
     const updatedBlog = { ...blogs[0], likes: blogs[0].likes + 2 }
 
     await api
-      .put(`/api/blogs/${id}`)
+      .put(`/api/blogs/${id}/`)
       .set('Authorization', token)
       .send(updatedBlog)
       .expect(200)
@@ -260,6 +260,34 @@ describe('when there is initially one user in db', () => {
   })
 })
 
+describe('posting comments', () => {
+  test('gets the comments right', async () => {
+    const userLoginInfo = {
+      username: 'root',
+      password: 'sekret'
+    }
+    const userLogin = await api
+      .post('/api/login/')
+      .send(userLoginInfo)
+    const token = (`bearer ${userLogin.body.token}`)
+    const blogs = await helper.blogsInDb()
+    const id = blogs[0].id
+    console.log('id', id)
+    console.log('comments', blogs[0], typeof blogs[0].comments, blogs[0].comments)
+    const updatedBlog = { ...blogs[0], comments: [...blogs[0].comments, 'wiskas2'] }
+    const comment = { comment: 'wiskas2' }
+
+
+
+    await api
+      .post(`/api/blogs/${id}/comments/`)
+      .set('Authorization', token)
+      .send(comment)
+      .expect(200)
+
+    expect(await helper.blogsInDb()).toContainEqual(updatedBlog)
+  })
+})
 afterAll(() => {
   mongoose.connection.close()
 })

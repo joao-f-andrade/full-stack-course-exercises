@@ -5,7 +5,8 @@ const initialBlogs = [
   { 'title':'Medium',
     'author':'root',
     'url':'https://medium.com/better-programming',
-    'likes':0
+    'likes':0,
+    'comments':['wiskas saquetas']
   },
   { 'title':'tempTitle',
     'author':'testAuthor',
