@@ -12,12 +12,12 @@ import usersService from './services/users'
 import { useDispatch, useSelector } from 'react-redux'
 import { initializeBlogs } from './reducers/blogReducer'
 import { addCurrentUser, addAllUsers } from './reducers/userReducer'
-import { Switch, Route } from "react-router-dom"
+import { Switch, Route, Link } from "react-router-dom"
 
 const App = () => {
   const user = useSelector(state => state.user.current)
   const dispatch = useDispatch()
-  
+
   const newBlogFormRef = useRef()
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -27,7 +27,7 @@ const App = () => {
       dispatch(addAllUsers(users))
     )
   }, [dispatch])
-  
+
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
     console.log('logged user', loggedUserJSON)
@@ -57,15 +57,17 @@ const App = () => {
 
   return (
     <div>
-      <h1>Blogs</h1>
-      <Notification />
       {user === null ?
         <LoginForm /> :
         <div>
-          <div>
-            <p> {`${user.name} is logged in`}  </p>
-            <button type='button' onClick={logOut} >Log out</button>
-          </div>
+          <header>
+            <Link to='/'>blogs</Link>
+            <Link to='/users'>users</Link>
+            <span> {`${user.name} is logged in`} <button type='button' onClick={logOut}>Log out</button> </span>
+            <h1>Blogs</h1>
+          </header>
+          <Notification />
+
           <Switch>
             <Route path='/users/:id' >
               <UserView />
