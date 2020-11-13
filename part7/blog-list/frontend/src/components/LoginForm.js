@@ -1,10 +1,13 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import loginService from '../services/login'
 import { setNotification } from '../reducers/notificationReducer'
 import { useDispatch } from 'react-redux'
 import { addCurrentUser } from '../reducers/userReducer'
 import blogService from '../services/blogs'
 import Notification from './Notification'
+import Form from 'react-bootstrap/Form'
+import Button from 'react-bootstrap/Button'
+
 
 const LoginForm = () => {
   const dispatch = useDispatch()
@@ -28,33 +31,36 @@ const LoginForm = () => {
       dispatch(setNotification('Wrong credentials', 5))
     }
   }
-  const handlePassChange=({ target }) => setPassword(target.value)
-  const handleUsernameChange=({ target }) => setUsername(target.value)
+  const handlePassChange = ({ target }) => setPassword(target.value)
+  const handleUsernameChange = ({ target }) => setUsername(target.value)
 
-return (
-  <form onSubmit={handleSubmit}>
-    <h2>Log In</h2>
-    <Notification />
+  return (
     <div>
-      username
-      <input
-        id='username'
-        type="text"
-        name="Username"
-        onChange={handleUsernameChange}
-      />
+      <h2>Log In</h2>
+      <Notification />
+      <Form onSubmit={handleSubmit}>
+        <Form.Group>
+          <Form.Label>  username</Form.Label>
+          <Form.Control
+            id='username'
+            type="text"
+            name="Username"
+            onChange={handleUsernameChange}
+          />
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>password</Form.Label>
+          <Form.Control
+            id='password'
+            type="password"
+            name="Password"
+            onChange={handlePassChange}
+          />
+        </Form.Group>
+        <Button type="submit" id='login-button'>login</Button>
+      </Form>
     </div>
-    <div>
-      password
-      <input
-        id='password'
-        type="password"
-        name="Password"
-        onChange={handlePassChange}
-      />
-    </div>
-    <button type="submit" id='login-button'>login</button>
-  </form>
-)}
+  )
+}
 
 export default LoginForm

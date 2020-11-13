@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux'
 import { setNotification } from '../reducers/notificationReducer'
 import { addBlog } from '../reducers/blogReducer'
 import Form from 'react-bootstrap/Form'
+import Button from 'react-bootstrap/Button'
 
 
 const NewBlogForm = ({ newBlogFormRef, user }) => {
@@ -81,7 +82,7 @@ const NewBlogForm = ({ newBlogFormRef, user }) => {
             value={newUrl}
           />
         </Form.Group>
-        <button className='submit' type="submit">submit</button>
+        <Button className='submit' type="submit">submit</Button>
       </Form>
     </div>
   )
