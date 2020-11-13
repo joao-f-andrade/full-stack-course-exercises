@@ -7,15 +7,10 @@ import { useParams, Redirect } from 'react-router-dom'
 import NewCommentForm from './NewCommentForm'
 import Button from 'react-bootstrap/Button'
 import Togglable from './Togglable'
+import ListGroup from 'react-bootstrap/ListGroup'
 
 const Blog = () => {
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
-  }
+
   const dispatch = useDispatch()
   const user = useSelector(state => state.user.current)
   const id = useParams().id
@@ -23,7 +18,7 @@ const Blog = () => {
 
   const blog = useSelector(state => state.blogs.find(blog => blog.id === id))
 
-  if (!blog) {return <Redirect to='/' />}
+  if (!blog) { return <Redirect to='/' /> }
   console.log('blog', blog)
 
   const handleLike = async (blog) => {
@@ -66,16 +61,23 @@ const Blog = () => {
     return comments.map(comment => returnComments(comment))
   }
   return (
-    <div className='blog' style={blogStyle}>
+    <div className='blog'>
       <h2>
         {blog.title} by {blog.author}
       </h2>
-      <div><a style={{color:'black'}} href={blog.url}> {blog.url} </a></div>
-      <div> likes {blog.likes} <Button size='sm' type='button' onClick={like} className='btnLike'>like</Button></div>
-      <div> {blog.user.name} </div>
-      <ul>{displayComments(blog.comments)}</ul>
-      <Togglable buttonLabel='Create new comment' className='newCommentForm' ref={newCommentFormRef}><NewCommentForm newCommentFormRef={newCommentFormRef} id={blog.id} user={user}/></Togglable>
-      <Button variant="outline-danger" onClick={erase} className='btnDelete' >delete blog</Button>
+      <ListGroup variant="flush">
+        <ListGroup.Item><a style={{ color: 'black' }} href={blog.url}> {blog.url} </a></ListGroup.Item>
+        <ListGroup.Item> likes {blog.likes} <Button size='sm' type='button' onClick={like} className='btnLike'>like</Button></ListGroup.Item>
+        <ListGroup.Item> {blog.user.name} </ListGroup.Item>
+        <ListGroup.Item><ul>{displayComments(blog.comments)}</ul></ListGroup.Item>
+        <Togglable
+          buttonLabel='Create new comment'
+          className='newCommentForm'
+          ref={newCommentFormRef}>
+          <NewCommentForm newCommentFormRef={newCommentFormRef} id={blog.id} user={user} />
+        </Togglable>
+        <Button variant="outline-danger" onClick={erase} className='btnDelete' >delete blog</Button>
+      </ListGroup>
     </div>
   )
 }

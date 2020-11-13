@@ -1,5 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import Alert from 'react-bootstrap/Alert'
 
 const Notification = () => {
 const message = useSelector(state => state.notification)
@@ -9,9 +10,9 @@ const message = useSelector(state => state.notification)
   }
 
   return (
-    <div className="error">
+    <Alert variant='primary' className="error">
       {message}
-    </div>
+    </Alert>
   )
 }
 
