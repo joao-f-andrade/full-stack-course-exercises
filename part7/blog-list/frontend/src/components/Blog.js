@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { addBlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 import blogService from '../services/blogs'
-import { useParams } from 'react-router-dom'
+import { useParams, Redirect } from 'react-router-dom'
 import NewCommentForm from './NewCommentForm'
 
 const Blog = () => {
@@ -15,10 +15,13 @@ const Blog = () => {
     marginBottom: 5
   }
   const dispatch = useDispatch()
-  const id = useParams().id
-  const blog = useSelector(state => state.blogs.find(blog => blog.id === id))
-  console.log('blog', blog)
   const user = useSelector(state => state.user.current)
+  const id = useParams().id
+
+  const blog = useSelector(state => state.blogs.find(blog => blog.id === id))
+
+  if (!blog) {return <Redirect to='/' />}
+  console.log('blog', blog)
 
   const handleLike = async (blog) => {
     await blogService.likeBlog(user.token, blog)
