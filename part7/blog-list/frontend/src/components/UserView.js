@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useParams, Redirect } from 'react-router-dom'
 
 const UserView = () => {
   const id = useParams().id
@@ -10,6 +10,7 @@ const UserView = () => {
     return null
   }
   const user = allUsers.find(user => user.id === id)
+  if (!user) {return <Redirect to='/' />}
   return (
     <>
       <h2>{user.username}</h2>
