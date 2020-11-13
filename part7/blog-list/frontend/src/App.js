@@ -55,7 +55,6 @@ const App = () => {
         <div>
           <header>
             <TopNavBar />
-            <h1>BlogsApp</h1>
           </header>
 
           <Notification />
@@ -70,8 +69,11 @@ const App = () => {
             <Route path='/blogs/:id'>
               <Blog />
             </Route>
-            <Route path='/'>
+            <Route path='/blogs'>
               <MainPage newBlogFormRef={newBlogFormRef}></MainPage>
+            </Route>
+            <Route path='/'>
+              <h1>BlogsApp</h1>
             </Route>
           </Switch>
         </div>
