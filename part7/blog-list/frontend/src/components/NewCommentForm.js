@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 import { setNotification } from '../reducers/notificationReducer'
 import { addBlog } from '../reducers/blogReducer'
 
-const NewCommentForm = ({ id, user }) => {
+const NewCommentForm = ({ id, user, newCommentFormRef }) => {
   const [newComment, setNewComment] = useState('')
   const dispatch = useDispatch()
 
@@ -23,6 +23,7 @@ const NewCommentForm = ({ id, user }) => {
     blogService.getAll().then(blogs =>
       dispatch(addBlog(blogs))
     )
+    newCommentFormRef.current.toggleVisibility()
   }
   const handleChange = ({ target }) => setNewComment(target.value)
 

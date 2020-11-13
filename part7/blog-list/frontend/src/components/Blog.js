@@ -1,10 +1,12 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { addBlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 import blogService from '../services/blogs'
 import { useParams, Redirect } from 'react-router-dom'
 import NewCommentForm from './NewCommentForm'
+import Button from 'react-bootstrap/Button'
+import Togglable from './Togglable'
 
 const Blog = () => {
   const blogStyle = {
@@ -17,6 +19,7 @@ const Blog = () => {
   const dispatch = useDispatch()
   const user = useSelector(state => state.user.current)
   const id = useParams().id
+  const newCommentFormRef = useRef()
 
   const blog = useSelector(state => state.blogs.find(blog => blog.id === id))
 
@@ -65,14 +68,14 @@ const Blog = () => {
   return (
     <div className='blog' style={blogStyle}>
       <h2>
-        {blog.title} {blog.author}
+        {blog.title} by {blog.author}
       </h2>
-      <div><a href={blog.url}> {blog.url} </a></div>
-      <div> likes {blog.likes} <button onClick={like} className='btnLike'>like</button></div>
+      <div><a style={{color:'black'}} href={blog.url}> {blog.url} </a></div>
+      <div> likes {blog.likes} <Button size='sm' type='button' onClick={like} className='btnLike'>like</Button></div>
       <div> {blog.user.name} </div>
       <ul>{displayComments(blog.comments)}</ul>
-      <NewCommentForm id={blog.id} user={user}/>
-      <button onClick={erase} className='btnDelete' >delete</button>
+      <Togglable buttonLabel='Create new comment' className='newCommentForm' ref={newCommentFormRef}><NewCommentForm newCommentFormRef={newCommentFormRef} id={blog.id} user={user}/></Togglable>
+      <Button variant="outline-danger" onClick={erase} className='btnDelete' >delete blog</Button>
     </div>
   )
 }

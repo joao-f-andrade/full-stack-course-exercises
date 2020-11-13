@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
@@ -18,8 +18,6 @@ const App = () => {
 
   const user = useSelector(state => state.user.current)
   const blogs = useSelector(state => state.blogs)
-
-  const newBlogFormRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -70,7 +68,7 @@ const App = () => {
               <Blog />
             </Route>
             <Route path='/blogs'>
-              <MainPage newBlogFormRef={newBlogFormRef}></MainPage>
+              <MainPage />
             </Route>
             <Route path='/'>
               <h1>BlogsApp</h1>
