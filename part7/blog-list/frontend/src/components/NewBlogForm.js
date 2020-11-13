@@ -3,9 +3,10 @@ import blogService from '../services/blogs'
 import { useDispatch } from 'react-redux'
 import { setNotification } from '../reducers/notificationReducer'
 import { addBlog } from '../reducers/blogReducer'
+import Form from 'react-bootstrap/Form'
 
 
-const NewBlogForm = ({  newBlogFormRef, user }) => {
+const NewBlogForm = ({ newBlogFormRef, user }) => {
   const [newAuthor, setNewAuthor] = useState('')
   const [newTitle, setNewTitle] = useState('')
   const [newUrl, setNewUrl] = useState('')
@@ -22,7 +23,7 @@ const NewBlogForm = ({  newBlogFormRef, user }) => {
       console.log('saved blog', newBlog)
       dispatch(setNotification(`${newBlog.title} by ${newBlog.author} added`, 5))
     } catch (exception) {
-      dispatch(setNotification('invalid blog',5))
+      dispatch(setNotification('invalid blog', 5))
       console.log(exception)
     }
     blogService.getAll().then(blogs =>
@@ -47,40 +48,42 @@ const NewBlogForm = ({  newBlogFormRef, user }) => {
   }
 
   return (
-    <form onSubmit={submit}>
-      <h2>Create new blog</h2>
-      <div>
-        title
-        <input
-          className='titleInput'
-          type="text"
-          name="title"
-          onChange={handleTitleChange}
-          value={newTitle}
-        />
-      </div>
-      <div>
-        author
-        <input
-          className='authorInput'
-          type="text"
-          name="author"
-          onChange={handleAuthorChange}
-          value={newAuthor}
-        />
-      </div>
-      <div>
-        url
-        <input
-          className='urlInput'
-          type="text"
-          name="url"
-          onChange={handleUrlChange}
-          value={newUrl}
-        />
-      </div>
-      <button className='submit' type="submit">submit</button>
-    </form>
+    <div>
+      <h3>Create new blog</h3>
+      <Form onSubmit={submit}>
+        <Form.Group>
+        <Form.Label>Title</Form.Label>  
+        <Form.Control
+            className='titleInput'
+            type="text"
+            name="title"
+            onChange={handleTitleChange}
+            value={newTitle}
+          />
+        </Form.Group>
+        <Form.Group>
+        <Form.Label>Author</Form.Label>
+        <Form.Control
+            className='authorInput'
+            type="text"
+            name="author"
+            onChange={handleAuthorChange}
+            value={newAuthor}
+          />
+        </Form.Group>
+        <Form.Group>
+        <Form.Label>Url</Form.Label>
+        <Form.Control
+            className='urlInput'
+            type="text"
+            name="url"
+            onChange={handleUrlChange}
+            value={newUrl}
+          />
+        </Form.Group>
+        <button className='submit' type="submit">submit</button>
+      </Form>
+    </div>
   )
 }
 export default NewBlogForm
