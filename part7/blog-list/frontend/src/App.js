@@ -9,15 +9,18 @@ import usersService from './services/users'
 import { useDispatch, useSelector } from 'react-redux'
 import { initializeBlogs } from './reducers/blogReducer'
 import { addCurrentUser, addAllUsers } from './reducers/userReducer'
-import { Switch, Route, Link } from "react-router-dom"
+import { Switch, Route } from "react-router-dom"
 import MainPage from './components/MainPage'
+import TopNavBar from './components/TopNavBar'
 
 const App = () => {
-  const user = useSelector(state => state.user.current)
   const dispatch = useDispatch()
+
+  const user = useSelector(state => state.user.current)
   const blogs = useSelector(state => state.blogs)
 
   const newBlogFormRef = useRef()
+
   useEffect(() => {
     blogService.getAll().then(blogs =>
       dispatch(initializeBlogs(blogs))
@@ -26,11 +29,13 @@ const App = () => {
       dispatch(addAllUsers(users))
     )
   }, [dispatch])
+
   useEffect(() => {
     usersService.getAll().then(users =>
       dispatch(addAllUsers(users))
     )
-  }, [dispatch,blogs])
+  }, [dispatch, blogs])
+
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
     console.log('logged user', loggedUserJSON)
@@ -42,10 +47,6 @@ const App = () => {
     }
   }, [dispatch])
 
-  const logOut = () => {
-    dispatch(addCurrentUser(null))
-    window.localStorage.removeItem('loggedUser')
-  }
 
   return (
     <div className='container'>
@@ -53,9 +54,7 @@ const App = () => {
         <LoginForm /> :
         <div>
           <header>
-            <Link to='/'>blogs</Link>
-            <Link to='/users'>users</Link>
-            <span> {`${user.name} is logged in`} <button type='button' onClick={logOut}>Log out</button> </span>
+            <TopNavBar />
             <h1>BlogsApp</h1>
           </header>
 
