@@ -27,8 +27,9 @@ let authors = [
 ]
 
 /*
- * Saattaisi olla järkevämpää assosioida kirja ja sen tekijä tallettamalla kirjan yhteyteen tekijän nimen sijaan tekijän id
- * Yksinkertaisuuden vuoksi tallennamme kuitenkin kirjan yhteyteen tekijän nimen
+It might make more sense to associate a book with its author by
+storing the author’sid instead of the author’s name in the book. 
+However, for simplicity, we will store the author's name in the book
 */
 
 let books = [
@@ -84,12 +85,28 @@ let books = [
 ]
 
 const typeDefs = gql`
+  type Book {
+    title: String!
+    published: Int!
+    author: Author!
+    id: ID!
+    genres: [String!]
+  }
+  type Author {
+    name: String!
+    born: Int
+    id: ID!
+  }
   type Query {
+    bookCount: Int
+    authorCount: Int
   }
 `
 
 const resolvers = {
   Query: {
+    bookCount: () => books.length,
+    authorCount: () => authors.length
   }
 }
 
